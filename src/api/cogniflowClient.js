@@ -1,0 +1,1 @@
+export { cogniflow } from './cogniflowAdapter';

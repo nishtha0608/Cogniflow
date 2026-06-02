@@ -1,0 +1,73 @@
+version: "3.9"
+
+# ─── CogniFlow full-stack compose ─────────────────────────────
+#
+# Usage:
+#   docker compose up --build        # first time
+#   docker compose up                 # subsequent runs
+#   docker compose down -v            # stop + remove volumes
+#
+# Optional env vars (copy .env.example to .env):
+#   OPENAI_API_KEY   — leave empty to use rich mock responses
+#   OPENAI_MODEL     — default: gpt-4o
+#   SECRET_KEY       — JWT secret (change before deploying!)
+# ──────────────────────────────────────────────────────────────
+
+services:
+
+  # ── FastAPI backend (SQLite, no external DB needed) ─────────
+  backend:
+    build:
+      context: ./cogniflow-backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL:               sqlite:////app/data/cogniflow.db
+      SECRET_KEY:                 ${SECRET_KEY:-cogniflow-dev-secret-change-in-prod}
+      ALGORITHM:                  HS256
+      ACCESS_TOKEN_EXPIRE_MINUTES: "10080"
+      UPLOAD_DIR:                 /app/uploads
+      OPENAI_API_KEY:             ${OPENAI_API_KEY:-}
+      OPENAI_MODEL:               ${OPENAI_MODEL:-gpt-4o}
+      DEMO_USER_EMAIL:            demo@cogniflow.ai
+      DEMO_USER_PASSWORD:         demo123456
+      DEMO_USER_NAME:             Demo Researcher
+      FIREBASE_PROJECT_ID:        ${FIREBASE_PROJECT_ID:-}
+      OPENALEX_API_KEY:           ${OPENALEX_API_KEY:-}
+      CHROMA_PATH:                /app/chroma
+    volumes:
+      - uploads:/app/uploads
+      - db:/app/data
+      - chroma_data:/app/chroma
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:8000/health')\""]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+
+  # ── Vite-built React frontend served by nginx ────────────────
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+      args:
+        VITE_FIREBASE_API_KEY:              ${VITE_FIREBASE_API_KEY:-}
+        VITE_FIREBASE_AUTH_DOMAIN:          ${VITE_FIREBASE_AUTH_DOMAIN:-}
+        VITE_FIREBASE_PROJECT_ID:           ${VITE_FIREBASE_PROJECT_ID:-}
+        VITE_FIREBASE_STORAGE_BUCKET:       ${VITE_FIREBASE_STORAGE_BUCKET:-}
+        VITE_FIREBASE_MESSAGING_SENDER_ID:  ${VITE_FIREBASE_MESSAGING_SENDER_ID:-}
+        VITE_FIREBASE_APP_ID:               ${VITE_FIREBASE_APP_ID:-}
+    ports:
+      - "3000:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  uploads:     # persists uploaded files across restarts
+  db:          # persists SQLite database across restarts
+  chroma_data: # persists ChromaDB vector index across restarts
