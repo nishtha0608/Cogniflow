@@ -166,8 +166,10 @@ const ai = {
   writing: {
     humanize:    (body) => apiFetch('/ai/writing/humanize',    { method: 'POST', body: JSON.stringify(body) }),
     plagiarism:  (body) => apiFetch('/ai/writing/plagiarism',  { method: 'POST', body: JSON.stringify(body) }),
-    improve:     (body) => apiFetch('/ai/writing/improve',     { method: 'POST', body: JSON.stringify(body) }),
-    stats:       (body) => apiFetch('/ai/writing/stats',       { method: 'POST', body: JSON.stringify(body) }),
+    improve:           (body) => apiFetch('/ai/writing/improve',             { method: 'POST', body: JSON.stringify(body) }),
+    applyImprovements:  (body) => apiFetch('/ai/writing/apply-improvements',  { method: 'POST', body: JSON.stringify(body) }),
+    rephraseConcerns:   (body) => apiFetch('/ai/writing/rephrase-concerns',   { method: 'POST', body: JSON.stringify(body) }),
+    stats:              (body) => apiFetch('/ai/writing/stats',                { method: 'POST', body: JSON.stringify(body) }),
   },
 };
 

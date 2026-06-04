@@ -1179,6 +1179,8 @@ class ChatRequest(BaseModel):
     doc_id: Optional[str] = None    # RAG: preferred over doc_text
     doc_name: Optional[str] = None
     doc_text: Optional[str] = None  # legacy fallback
+    image_base64: Optional[str] = None
+    image_media_type: Optional[str] = None
     project_title: Optional[str] = None
     project_field: Optional[str] = None
     project_abstract: Optional[str] = None
@@ -1254,6 +1256,8 @@ def research_chat(
         prompt=user_prompt,
         system_prompt=system_prompt,
         response_json_schema=schema,
+        image_base64=body.image_base64,
+        image_media_type=body.image_media_type,
     )
 
     if not llm_service._is_api_key_configured():

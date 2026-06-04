@@ -1,4 +1,5 @@
 """Writing AI router — dedicated endpoints for humanize, plagiarism, improve, and stats."""
+import json
 import re
 from typing import List, Optional
 
@@ -10,6 +11,7 @@ from app.core.database import get_db
 from app.core.security import get_optional_user
 from app.models import Document, User
 from app.services import llm as llm_service
+from app.services.openalex import search_papers, format_citation
 
 router = APIRouter(prefix="/api/ai/writing", tags=["writing"])
 
@@ -166,12 +168,12 @@ _MOCK_PLAGIARISM = {
         {
             "text": "meaningful relationship between the variables",
             "reason": "Frequently used phrase in quantitative research literature",
-            "suggestion": "Rephrase to be more specific about the nature of the relationship, or cite the framework you're drawing from.",
+            "suggestion": "Paraphrase: describe the specific direction and magnitude of the relationship in your own words (e.g. 'X increased significantly as Y decreased').",
         },
         {
             "text": "carries implications for both theoretical development and practical application",
             "reason": "Common concluding boilerplate found across many published papers",
-            "suggestion": "State the specific implication rather than using this generic framing.",
+            "suggestion": "Paraphrase: replace with a concrete sentence naming your specific theoretical contribution and one practical use case.",
         },
     ],
     "summary": (
@@ -315,7 +317,9 @@ def check_plagiarism(
             "- originality_score (0-100): 100 = fully original, 0 = entirely derivative. "
             "Score above 80 is acceptable for publication.\n"
             "- concerns: list of specific passages (include the exact phrase), the reason for concern, "
-            "and a concrete actionable suggestion. Keep to genuine concerns only (max 5).\n"
+            "and a concrete actionable suggestion. The suggestion should ALWAYS recommend paraphrasing "
+            "the flagged text in the author's own words as the primary fix. Only suggest adding a citation "
+            "as a secondary option when the content is a specific claim or theory. Keep to genuine concerns only (max 5).\n"
             "- summary: 1-2 sentence plain-English verdict a researcher can act on.\n\n"
             "Be rigorous but fair. Common technical terms do not need citation. "
             "Only flag genuine originality risks."
@@ -324,7 +328,23 @@ def check_plagiarism(
     )
 
     if not llm_service._is_api_key_configured():
-        result = _MOCK_PLAGIARISM
+        # Extract real phrases from the submitted text so rephrase can find them verbatim
+        sentences = [s.strip() for s in re.split(r'(?<=[.!?])\s+', text) if s.strip() and len(s.split()) > 4]
+        mock_concerns = []
+        for sent in sentences[:2]:
+            words = sent.split()
+            phrase = ' '.join(words[1:min(8, len(words))])
+            if phrase:
+                mock_concerns.append({
+                    "text": phrase,
+                    "reason": "Phrase matches common academic writing patterns found in published literature.",
+                    "suggestion": "Rephrase this in your own words to strengthen originality.",
+                })
+        result = {
+            "originality_score": 86,
+            "concerns": mock_concerns if mock_concerns else _MOCK_PLAGIARISM["concerns"],
+            "summary": _MOCK_PLAGIARISM["summary"],
+        }
 
     # Persist originality score to the document
     if body.doc_id and current_user:
@@ -415,6 +435,201 @@ def improve_writing(
         overall_quality=int(result.get("overall_quality", 70)),
         readability_score=int(result.get("readability_score", 65)),
     )
+
+
+class ApplyImprovementsRequest(BaseModel):
+    text: str
+    suggestions: List[dict]
+    citation_style: str = "apa"
+
+
+class CitedPaper(BaseModel):
+    citation: str
+    title: str
+    authors: List[str]
+    year: Optional[int]
+    doi: str
+
+
+class ApplyImprovementsResponse(BaseModel):
+    improved_text: str
+    citations_added: int
+    papers_used: List[CitedPaper]
+
+
+@router.post("/apply-improvements", response_model=ApplyImprovementsResponse)
+def apply_improvements(body: ApplyImprovementsRequest):
+    """Rewrite text applying all suggestions and inserting real citations from OpenAlex."""
+    text = body.text[:5000]
+    style = body.citation_style if body.citation_style in ("apa", "mla", "bibtex") else "apa"
+
+    # ── Step 1: Extract 3 academic search queries from the text ──────────────
+    queries_schema = {
+        "type": "object",
+        "properties": {
+            "queries": {"type": "array", "items": {"type": "string"}},
+        },
+    }
+    kw_result = llm_service.invoke_llm(
+        prompt=f"Academic text:\n\n{text[:2000]}",
+        system_prompt=(
+            "Extract exactly 3 distinct academic search queries from this text. "
+            "Each query should target a specific claim, concept, or methodology mentioned "
+            "so that searching an academic database would find relevant supporting literature. "
+            "Keep each query under 10 words. Return valid JSON only."
+        ),
+        response_json_schema=queries_schema,
+    )
+    search_queries: List[str] = []
+    if isinstance(kw_result, dict):
+        search_queries = kw_result.get("queries") or []
+    if not search_queries:
+        search_queries = [text[:80]]
+
+    # ── Step 2: Search OpenAlex for each query, deduplicate by paper ID ──────
+    papers_by_id: dict = {}
+    for q in search_queries[:3]:
+        result = search_papers(str(q)[:120], per_page=5)
+        for p in result.get("results", []):
+            pid = p.get("id", "")
+            if pid and pid not in papers_by_id:
+                papers_by_id[pid] = p
+
+    # Keep top 8 by citation count
+    top_papers = sorted(
+        papers_by_id.values(),
+        key=lambda p: p.get("cited_by_count", 0),
+        reverse=True,
+    )[:8]
+
+    # ── Step 3: Format each paper as a citation ───────────────────────────────
+    formatted: List[CitedPaper] = []
+    for p in top_papers:
+        formatted.append(CitedPaper(
+            citation=format_citation(p, style=style),
+            title=p.get("title", ""),
+            authors=p.get("authors", []),
+            year=p.get("year"),
+            doi=p.get("doi", ""),
+        ))
+
+    cite_block = "\n".join(f"[{i+1}] {f.citation}" for i, f in enumerate(formatted))
+
+    # ── Step 4: Rewrite with suggestions + inline citations ───────────────────
+    suggestions_text = "\n".join(
+        f"- [{s.get('type','').upper()}] {s.get('text','')}" for s in body.suggestions
+    )
+    inline_note = " Use \\cite{key} notation." if style == "bibtex" else " Use [N] notation."
+
+    improved = llm_service.invoke_llm(
+        prompt=(
+            f"Original text:\n\n{text}\n\n"
+            f"Improvement suggestions to apply:\n{suggestions_text}\n\n"
+            f"Available references:\n{cite_block}"
+        ),
+        system_prompt=(
+            "You are a senior academic editor. Rewrite the text to:\n"
+            "1. Address ALL improvement suggestions listed\n"
+            f"2. Insert inline citations ({inline_note.strip()}) wherever a claim, statistic, "
+            "or established concept is supported by the provided references\n"
+            "3. Add a 'References' section at the very end listing only the references you "
+            f"actually cited, formatted in {style.upper()} style\n\n"
+            "Rules:\n"
+            "- Preserve every factual claim, result, and technical detail exactly\n"
+            "- Maintain academic register throughout\n"
+            "- Do not cite opinions or novel contributions — only established claims\n"
+            "- Only use citations from the provided reference list\n"
+            "- Return ONLY the rewritten text + References section, nothing else"
+        ),
+    )
+
+    if not llm_service._is_api_key_configured():
+        # Mock rewrite: apply simple but visible improvements to each paragraph
+        paragraphs = [p.strip() for p in text.split("\n\n") if p.strip()]
+        mock_paragraphs = []
+        improvements = [
+            "The analysis presented here demonstrates significant methodological rigour.",
+            "These findings contribute meaningfully to the existing body of literature.",
+            "Further empirical investigation would strengthen these conclusions considerably.",
+        ]
+        for i, para in enumerate(paragraphs):
+            mock_paragraphs.append(para)
+            if i == 0 and len(paragraphs) > 1:
+                mock_paragraphs.append(improvements[0])
+        if len(paragraphs) == 1:
+            mock_paragraphs.append(improvements[1])
+        refs_section = ""
+        if formatted:
+            refs_section = "\n\n## References\n" + "\n".join(
+                f"[{i+1}] {f.citation}" for i, f in enumerate(formatted[:4])
+            )
+        improved = "\n\n".join(mock_paragraphs) + refs_section
+
+    improved_str = improved if isinstance(improved, str) else text
+
+    # Count unique inline citation markers
+    inline_hits = set(re.findall(r'\[(\d+)\]', improved_str))
+    citations_added = len(inline_hits)
+
+    return ApplyImprovementsResponse(
+        improved_text=improved_str,
+        citations_added=citations_added,
+        papers_used=formatted,
+    )
+
+
+class RephraseConcernsRequest(BaseModel):
+    text: str
+    concerns: List[dict]  # each has 'text' (flagged phrase) and 'suggestion'
+
+
+class RephraseConcernsResponse(BaseModel):
+    rephrased_text: str
+    changes_made: int
+
+
+@router.post("/rephrase-concerns", response_model=RephraseConcernsResponse)
+def rephrase_concerns(body: RephraseConcernsRequest):
+    """Rewrite flagged plagiarism concerns in-place using LLM suggestions."""
+    text = body.text[:5000]
+    concerns = body.concerns[:5]
+
+    concerns_block = "\n".join(
+        f'- Phrase: "{c.get("text", "")}" → Suggestion: {c.get("suggestion", "rephrase in your own words")}'
+        for c in concerns
+        if c.get("text")
+    )
+
+    rephrased = llm_service.invoke_llm(
+        prompt=f"Original text:\n\n{text}\n\nFlagged phrases to rephrase:\n{concerns_block}",
+        system_prompt=(
+            "You are an academic editor fixing originality concerns in a research paper.\n\n"
+            "For each flagged phrase listed, find it in the original text and rewrite it "
+            "in the author's own words following the suggestion given. "
+            "Keep all other text exactly as-is. "
+            "Preserve technical terms, citations, and academic register. "
+            "Return ONLY the full rewritten text — no preamble, no commentary."
+        ),
+    )
+
+    if not llm_service._is_api_key_configured():
+        # Mock: replace each flagged phrase with a paraphrased version
+        rephrased_text = text
+        changes = 0
+        for c in concerns:
+            phrase = c.get("text", "")
+            if phrase and phrase in rephrased_text:
+                # Simple mock rephrase: wrap in paraphrase markers
+                replacement = f"[rephrased: {phrase[:40]}...]" if len(phrase) > 40 else f"[rephrased: {phrase}]"
+                rephrased_text = rephrased_text.replace(phrase, replacement, 1)
+                changes += 1
+        rephrased = rephrased_text if changes else text + "\n\n[Note: Flagged phrases were not found verbatim — manual review recommended.]"
+        return RephraseConcernsResponse(rephrased_text=rephrased, changes_made=changes)
+
+    rephrased_str = rephrased if isinstance(rephrased, str) else text
+    changes_made = sum(1 for c in concerns if c.get("text") and c["text"] not in rephrased_str)
+
+    return RephraseConcernsResponse(rephrased_text=rephrased_str, changes_made=changes_made)
 
 
 @router.post("/stats", response_model=StatsResponse)

@@ -119,32 +119,34 @@ export default function GapAnalyzer() {
   const handleAnalyze = async () => {
     if (!researchTopic.trim() && !uploadedFile) return;
     setIsAnalyzing(true);
+    try {
+      const response = await cogniflow.ai.gapAnalysis({
+        topic: researchTopic || undefined,
+        doc_id: uploadedFile?.doc_id,
+        doc_text: uploadedFile?.doc_id ? undefined : uploadedFile?.text?.slice(0, 12000),
+        doc_name: uploadedFile?.name,
+        project_title: currentProject?.title,
+        project_abstract: currentProject?.abstract,
+        project_research_questions: currentProject?.research_questions,
+        project_keywords: currentProject?.keywords,
+      });
 
-    const response = await cogniflow.ai.gapAnalysis({
-      topic: researchTopic || undefined,
-      doc_id: uploadedFile?.doc_id,
-      doc_text: uploadedFile?.doc_id ? undefined : uploadedFile?.text?.slice(0, 12000),
-      doc_name: uploadedFile?.name,
-      project_title: currentProject?.title,
-      project_abstract: currentProject?.abstract,
-      project_research_questions: currentProject?.research_questions,
-      project_keywords: currentProject?.keywords,
-    });
-
-    if (response.gaps) {
-      for (const gap of response.gaps) {
-        await cogniflow.entities.ResearchGap.create({
-          ...gap,
-          project_id: currentProject?.id,
-          status: 'identified'
-        });
+      if (response.gaps) {
+        for (const gap of response.gaps) {
+          const gapData = { ...gap, status: 'identified' };
+          if (currentProject?.id) gapData.project_id = currentProject.id;
+          await cogniflow.entities.ResearchGap.create(gapData);
+        }
+        queryClient.invalidateQueries({ queryKey: ['gaps'] });
       }
-      queryClient.invalidateQueries({ queryKey: ['gaps'] });
-    }
 
-    setIsAnalyzing(false);
-    await handleFileRemove();
-    setResearchTopic('');
+      await handleFileRemove();
+      setResearchTopic('');
+    } catch (err) {
+      alert(`Analysis failed: ${err.message || 'Please try again.'}`);
+    } finally {
+      setIsAnalyzing(false);
+    }
   };
 
   const filteredGaps = filterType === 'all' 
@@ -292,7 +294,7 @@ export default function GapAnalyzer() {
 
             <Dialog open={showAddDialog} onOpenChange={setShowAddDialog}>
               <DialogTrigger asChild>
-                <Button variant="outline" className="border-slate-700">
+                <Button className="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-600">
                   <Plus size={16} className="mr-2" />
                   Add Gap
                 </Button>
@@ -353,7 +355,11 @@ export default function GapAnalyzer() {
                 <DialogFooter>
                   <Button variant="outline" onClick={() => setShowAddDialog(false)}>Cancel</Button>
                   <Button 
-                    onClick={() => createGapMutation.mutate({ ...newGap, project_id: currentProject?.id, status: 'identified' })}
+                    onClick={() => {
+                      const data = { ...newGap, status: 'identified' };
+                      if (currentProject?.id) data.project_id = currentProject.id;
+                      createGapMutation.mutate(data);
+                    }}
                     disabled={!newGap.title.trim()}
                   >
                     Add Gap

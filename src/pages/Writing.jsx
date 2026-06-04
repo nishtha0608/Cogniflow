@@ -39,7 +39,7 @@ import {
   Bot,
   ShieldCheck,
   X,
-  ArrowRightLeft
+  Pencil,
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -98,8 +98,13 @@ export default function Writing() {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [isPlagChecking, setIsPlagChecking] = useState(false);
   const [isHumanizing, setIsHumanizing] = useState(false);
+  const [isApplying, setIsApplying] = useState(false);
+  const [isRephrasing, setIsRephrasing] = useState(false);
+  const [applyResult, setApplyResult] = useState(null); // { citations_added, papers_count }
   const [plagiarismScore, setPlagiarismScore] = useState(null);
   const [briefReport, setBriefReport] = useState(null); // { type, ...fields }
+  const [renamingDocId, setRenamingDocId] = useState(null);
+  const [renameValue, setRenameValue] = useState('');
   const [createError, setCreateError] = useState(null);
   const queryClient = useQueryClient();
   const { activeProject } = useActiveProject();
@@ -176,54 +181,168 @@ export default function Writing() {
   const handleAIImprove = async () => {
     if (!content.trim()) return;
     setIsAnalyzing(true);
-
-    const response = await cogniflow.ai.writing.improve({
-      text: content.slice(0, 5000),
-      doc_id: activeDocument?.id,
-    });
-
-    setAiSuggestions(response.suggestions || []);
-    setIsAnalyzing(false);
+    setApplyResult(null);
+    try {
+      const improveRes = await cogniflow.ai.writing.improve({
+        text: content.slice(0, 5000),
+        doc_id: activeDocument?.id,
+      });
+      const suggestions = improveRes.suggestions || [];
+      if (!suggestions.length) return;
+      setAiSuggestions(suggestions);
+      setIsApplying(true);
+      const applyRes = await cogniflow.ai.writing.applyImprovements({
+        text: content.slice(0, 5000),
+        suggestions,
+        citation_style: 'apa',
+      });
+      if (applyRes.improved_text) {
+        setContent(applyRes.improved_text);
+        setAiSuggestions([]);
+        setApplyResult({
+          citations_added: applyRes.citations_added || 0,
+          papers_count: applyRes.papers_used?.length || 0,
+        });
+      }
+    } catch (e) {
+      console.error('AI Improve failed:', e);
+    } finally {
+      setIsAnalyzing(false);
+      setIsApplying(false);
+    }
   };
 
   const handlePlagiarismCheck = async () => {
     if (!content.trim()) return;
     setIsPlagChecking(true);
     setBriefReport(null);
-
-    const response = await cogniflow.ai.writing.plagiarism({
-      text: content.slice(0, 5000),
-      doc_id: activeDocument?.id,
-    });
-
-    setPlagiarismScore(response);
-    setBriefReport({
-      type: 'plagiarism',
-      originality_score: response.originality_score,
-      concerns_count: response.concerns?.length ?? 0,
-      summary: response.summary,
-    });
-    setIsPlagChecking(false);
+    try {
+      const response = await cogniflow.ai.writing.plagiarism({
+        text: content.slice(0, 5000),
+        doc_id: activeDocument?.id,
+      });
+      setPlagiarismScore(response);
+      setBriefReport({
+        type: 'plagiarism',
+        originality_score: response.originality_score,
+        concerns_count: response.concerns?.length ?? 0,
+        summary: response.summary,
+      });
+    } catch (e) {
+      console.error('Plagiarism check failed:', e);
+    } finally {
+      setIsPlagChecking(false);
+    }
   };
 
   const handleHumanize = async () => {
     if (!content.trim()) return;
     setIsHumanizing(true);
     setBriefReport(null);
+    try {
+      const response = await cogniflow.ai.writing.humanize({
+        text: content.slice(0, 5000),
+        doc_id: activeDocument?.id,
+      });
+      setBriefReport({
+        type: 'humanize',
+        ai_risk_before: response.ai_risk_before,
+        ai_risk_after: response.ai_risk_after,
+        changes: response.changes ?? [],
+        humanized_text: response.humanized_text,
+      });
+    } catch (e) {
+      console.error('Humanize failed:', e);
+    } finally {
+      setIsHumanizing(false);
+    }
+  };
 
-    const response = await cogniflow.ai.writing.humanize({
-      text: content.slice(0, 5000),
-      doc_id: activeDocument?.id,
-    });
+  const handleApplyImprovements = async () => {
+    if (!content.trim() || !aiSuggestions.length) return;
+    setIsApplying(true);
+    setApplyResult(null);
+    try {
+      const response = await cogniflow.ai.writing.applyImprovements({
+        text: content.slice(0, 5000),
+        suggestions: aiSuggestions,
+        citation_style: 'apa',
+      });
+      if (response.improved_text) {
+        setContent(response.improved_text);
+        setAiSuggestions([]);
+        setApplyResult({
+          citations_added: response.citations_added || 0,
+          papers_count: response.papers_used?.length || 0,
+        });
+      }
+    } catch (e) {
+      console.error('Apply improvements failed:', e);
+    } finally {
+      setIsApplying(false);
+    }
+  };
 
-    setBriefReport({
-      type: 'humanize',
-      ai_risk_before: response.ai_risk_before,
-      ai_risk_after: response.ai_risk_after,
-      changes: response.changes ?? [],
-      humanized_text: response.humanized_text,
-    });
-    setIsHumanizing(false);
+  const handleRephraseAll = async () => {
+    if (!content.trim() || !plagiarismScore?.concerns?.length) return;
+    setIsRephrasing(true);
+    try {
+      const response = await cogniflow.ai.writing.rephraseConcerns({
+        text: content.slice(0, 5000),
+        concerns: plagiarismScore.concerns,
+      });
+      if (response.rephrased_text) {
+        setContent(response.rephrased_text);
+        setPlagiarismScore(null);
+        setBriefReport(null);
+      }
+    } catch (e) {
+      console.error('Rephrase failed:', e);
+    } finally {
+      setIsRephrasing(false);
+    }
+  };
+
+  const handleRenameSubmit = (docId) => {
+    const trimmed = renameValue.trim();
+    if (trimmed && trimmed !== documents.find(d => d.id === docId)?.title) {
+      updateDocumentMutation.mutate({ id: docId, data: { title: trimmed } });
+      if (activeDocument?.id === docId) {
+        setActiveDocument(prev => ({ ...prev, title: trimmed }));
+      }
+    }
+    setRenamingDocId(null);
+  };
+
+  const handleExportPDF = () => {
+    if (!activeDocument) return;
+    const win = window.open('', '_blank');
+    const escapedTitle = (activeDocument.title || 'Document').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    const escapedContent = content
+      .split('\n')
+      .map(line => `<p>${line.replace(/</g, '&lt;').replace(/>/g, '&gt;') || '&nbsp;'}</p>`)
+      .join('');
+    win.document.write(`<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>${escapedTitle}</title>
+  <style>
+    body{font-family:Georgia,serif;max-width:800px;margin:40px auto;padding:0 40px;line-height:1.7;color:#222}
+    h1{font-size:22px;margin-bottom:6px}
+    .meta{color:#888;font-size:13px;margin-bottom:28px;padding-bottom:14px;border-bottom:1px solid #ddd}
+    p{margin:0 0 6px}
+    @media print{body{margin:0;padding:20px}}
+  </style>
+</head>
+<body>
+  <h1>${escapedTitle}</h1>
+  <div class="meta">${countWords(content)} words &middot; Exported ${new Date().toLocaleDateString()}</div>
+  ${escapedContent}
+  <script>window.onload=()=>{window.print()}<\/script>
+</body>
+</html>`);
+    win.document.close();
   };
 
   const insertTemplate = (template) => {
@@ -257,29 +376,51 @@ export default function Writing() {
           <div className="p-3 space-y-2">
             <p className="text-xs font-semibold text-slate-500 uppercase px-2 mb-2">Documents</p>
             {documents.map((doc) => (
-              <button
+              <div
                 key={doc.id}
-                onClick={() => {
-                  setActiveDocument(doc);
-                  setContent(doc.content || '');
-                }}
                 className={cn(
-                  "w-full text-left p-3 rounded-lg transition-all",
+                  "group w-full text-left p-3 rounded-lg transition-all",
                   activeDocument?.id === doc.id
                     ? "bg-blue-500/20 border border-blue-500/30"
                     : "bg-slate-800/30 hover:bg-slate-800/50 border border-transparent"
                 )}
               >
-                <div className="flex items-start gap-2">
-                  <FileText size={16} className="text-slate-400 mt-0.5 flex-shrink-0" />
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-white truncate">{doc.title}</p>
-                    <p className="text-xs text-slate-500 mt-1">
-                      {doc.word_count || 0} words
-                    </p>
+                {renamingDocId === doc.id ? (
+                  <input
+                    autoFocus
+                    value={renameValue}
+                    onChange={e => setRenameValue(e.target.value)}
+                    onBlur={() => handleRenameSubmit(doc.id)}
+                    onKeyDown={e => {
+                      if (e.key === 'Enter') handleRenameSubmit(doc.id);
+                      if (e.key === 'Escape') setRenamingDocId(null);
+                    }}
+                    className="w-full bg-slate-700 text-white text-sm rounded px-2 py-1 outline-none border border-blue-500/50 focus:border-blue-400"
+                  />
+                ) : (
+                  <div
+                    className="flex items-start gap-2 cursor-pointer"
+                    onClick={() => { setActiveDocument(doc); setContent(doc.content || ''); }}
+                  >
+                    <FileText size={16} className="text-slate-400 mt-0.5 flex-shrink-0" />
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium text-white leading-snug break-words">{doc.title}</p>
+                      <p className="text-xs text-slate-500 mt-1">{doc.word_count || 0} words</p>
+                    </div>
+                    <button
+                      onClick={e => {
+                        e.stopPropagation();
+                        setRenamingDocId(doc.id);
+                        setRenameValue(doc.title || '');
+                      }}
+                      className="opacity-0 group-hover:opacity-100 text-slate-500 hover:text-white transition-all flex-shrink-0 mt-0.5"
+                      title="Rename"
+                    >
+                      <Pencil size={12} />
+                    </button>
                   </div>
-                </div>
-              </button>
+                )}
+              </div>
             ))}
           </div>
         </ScrollArea>
@@ -329,13 +470,25 @@ export default function Writing() {
             </div>
 
             <div className="flex items-center gap-2">
+              {/* AI Improve button */}
+              <Button
+                size="sm"
+                onClick={handleAIImprove}
+                disabled={isAnalyzing || !content.trim()}
+                className="h-8 bg-blue-600/20 hover:bg-blue-600/30 text-blue-300 border border-blue-500/40 hover:border-blue-400"
+              >
+                {isAnalyzing
+                  ? <Loader2 size={13} className="animate-spin mr-1.5" />
+                  : <Sparkles size={13} className="mr-1.5" />}
+                AI Improve
+              </Button>
+
               {/* Humanize button */}
               <Button
                 size="sm"
-                variant="outline"
                 onClick={handleHumanize}
                 disabled={isHumanizing || isPlagChecking || !content.trim()}
-                className="h-8 border-purple-500/40 text-purple-300 hover:bg-purple-500/10 hover:text-purple-200 hover:border-purple-400"
+                className="h-8 bg-purple-600/20 hover:bg-purple-600/30 text-purple-300 border border-purple-500/40 hover:border-purple-400"
               >
                 {isHumanizing
                   ? <Loader2 size={13} className="animate-spin mr-1.5" />
@@ -346,15 +499,25 @@ export default function Writing() {
               {/* Plagiarism check button */}
               <Button
                 size="sm"
-                variant="outline"
                 onClick={handlePlagiarismCheck}
                 disabled={isPlagChecking || isHumanizing || !content.trim()}
-                className="h-8 border-emerald-500/40 text-emerald-300 hover:bg-emerald-500/10 hover:text-emerald-200 hover:border-emerald-400"
+                className="h-8 bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-300 border border-emerald-500/40 hover:border-emerald-400"
               >
                 {isPlagChecking
                   ? <Loader2 size={13} className="animate-spin mr-1.5" />
                   : <ShieldCheck size={13} className="mr-1.5" />}
                 Plag Check
+              </Button>
+
+              {/* Export PDF button */}
+              <Button
+                size="sm"
+                onClick={handleExportPDF}
+                disabled={!activeDocument || !content.trim()}
+                className="h-8 bg-slate-700/50 hover:bg-slate-700 text-slate-300 border border-slate-600 hover:border-slate-500"
+              >
+                <Download size={13} className="mr-1.5" />
+                Export PDF
               </Button>
 
               <div className="w-px h-5 bg-slate-700" />
@@ -478,13 +641,12 @@ export default function Writing() {
                   {briefReport.humanized_text && (
                     <Button
                       size="sm"
-                      className="mt-2 h-7 text-xs bg-blue-600 hover:bg-blue-700"
+                      className="mt-2 h-7 text-xs bg-blue-600 hover:bg-blue-700 text-white"
                       onClick={() => {
                         setContent(briefReport.humanized_text);
                         setBriefReport(null);
                       }}
                     >
-                      <ArrowRightLeft size={12} className="mr-1.5" />
                       Apply humanized text
                     </Button>
                   )}
@@ -549,8 +711,8 @@ export default function Writing() {
 
           {/* Preview */}
           {(viewMode === 'preview' || viewMode === 'split') && (
-            <div className="flex-1 p-6 overflow-auto bg-white">
-              <div className="max-w-3xl mx-auto prose prose-slate">
+            <div className="flex-1 p-6 overflow-auto bg-slate-950">
+              <div className="max-w-3xl mx-auto prose prose-invert prose-sm">
                 <ReactMarkdown>{content || '*No content yet*'}</ReactMarkdown>
               </div>
             </div>
@@ -558,33 +720,47 @@ export default function Writing() {
         </div>
 
         {/* Bottom Stats Bar */}
-        <div className="px-4 py-2 border-t border-slate-800 bg-slate-900/50 flex items-center justify-between text-sm">
+        <div className="px-4 py-2 border-t border-slate-800 bg-slate-900/50 flex items-center text-sm">
           <div className="flex items-center gap-4 text-slate-400">
             <span>{countWords(content)} words</span>
             <span>{content.length} characters</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handleAIImprove}
-              disabled={isAnalyzing || !content.trim()}
-              className="text-blue-400"
-            >
-              {isAnalyzing ? <Loader2 size={14} className="animate-spin mr-2" /> : <Sparkles size={14} className="mr-2" />}
-              AI Improve
-            </Button>
           </div>
         </div>
       </div>
 
       {/* AI Suggestions Panel */}
-      {(aiSuggestions.length > 0 || plagiarismScore) && (
+      {(aiSuggestions.length > 0 || plagiarismScore || applyResult) && (
         <div className="w-72 flex-shrink-0 border-l border-slate-800 bg-slate-900/30 flex flex-col overflow-hidden">
-          <div className="p-4 border-b border-slate-800">
+          <div className="p-4 border-b border-slate-800 flex items-center justify-between">
             <h3 className="font-semibold text-white">AI Analysis</h3>
+            <button
+              onClick={() => { setAiSuggestions([]); setPlagiarismScore(null); setApplyResult(null); }}
+              className="text-slate-500 hover:text-white transition-colors"
+            >
+              <X size={14} />
+            </button>
           </div>
           <ScrollArea className="flex-1 p-4">
+            {applyResult && (
+              <Card className="mb-4 bg-emerald-500/10 border-emerald-500/30">
+                <CardContent className="pt-4 pb-3">
+                  <div className="flex items-start gap-2">
+                    <CheckCircle size={15} className="text-emerald-400 mt-0.5 flex-shrink-0" />
+                    <div>
+                      <p className="text-sm font-semibold text-white">Document improved</p>
+                      {applyResult.citations_added > 0 ? (
+                        <p className="text-xs text-slate-300 mt-0.5">
+                          {applyResult.citations_added} inline citation{applyResult.citations_added !== 1 ? 's' : ''} inserted
+                          {applyResult.papers_count > 0 && ` from ${applyResult.papers_count} papers`} · References section added
+                        </p>
+                      ) : (
+                        <p className="text-xs text-slate-300 mt-0.5">All suggestions applied. No matching papers found for citations.</p>
+                      )}
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
             {plagiarismScore && (
               <Card className="mb-4 bg-slate-800/50 border-slate-700">
                 <CardHeader className="pb-2">
@@ -603,10 +779,21 @@ export default function Writing() {
                     <div className="mt-3 space-y-2">
                       {plagiarismScore.concerns.slice(0, 3).map((concern, i) => (
                         <div key={i} className="p-2 bg-amber-500/10 rounded border border-amber-500/20">
-                          <p className="text-xs text-amber-300">{concern.reason}</p>
+                          <p className="text-xs font-medium text-amber-300">"{concern.text}"</p>
                           <p className="text-xs text-slate-400 mt-1">{concern.suggestion}</p>
                         </div>
                       ))}
+                      <Button
+                        size="sm"
+                        className="w-full mt-1 h-7 text-xs bg-amber-600/20 hover:bg-amber-600/30 text-amber-300 border border-amber-500/40"
+                        onClick={handleRephraseAll}
+                        disabled={isRephrasing}
+                      >
+                        {isRephrasing
+                          ? <Loader2 size={11} className="animate-spin mr-1.5" />
+                          : <Sparkles size={11} className="mr-1.5" />}
+                        {isRephrasing ? 'Rephrasing...' : 'Rephrase flagged sections'}
+                      </Button>
                     </div>
                   )}
                 </CardContent>
@@ -617,8 +804,8 @@ export default function Writing() {
               <div className="space-y-3">
                 <h4 className="text-sm font-medium text-slate-400">Suggestions</h4>
                 {aiSuggestions.map((suggestion, i) => (
-                  <div 
-                    key={i} 
+                  <div
+                    key={i}
                     className={cn(
                       "p-3 rounded-lg border",
                       suggestion.severity === 'high' ? "bg-red-500/10 border-red-500/20" :
@@ -639,6 +826,19 @@ export default function Writing() {
                     </div>
                   </div>
                 ))}
+                <div className="mt-3 pt-3 border-t border-slate-700/50">
+                  <Button
+                    className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+                    size="sm"
+                    onClick={handleApplyImprovements}
+                    disabled={isApplying}
+                  >
+                    {isApplying
+                      ? <Loader2 size={13} className="animate-spin mr-1.5" />
+                      : <Sparkles size={13} className="mr-1.5" />}
+                    {isApplying ? 'Improving...' : 'Improve with AI'}
+                  </Button>
+                </div>
               </div>
             )}
           </ScrollArea>

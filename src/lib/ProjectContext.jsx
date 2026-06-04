@@ -7,9 +7,10 @@ const ProjectContext = createContext(null);
 
 export function ProjectProvider({ children }) {
   const { user } = useAuth();
-  const [activeProjectId, setActiveProjectId] = useState(() =>
-    localStorage.getItem('activeProjectId') || null
-  );
+  const [activeProjectId, setActiveProjectId] = useState(() => {
+    const stored = localStorage.getItem('activeProjectId');
+    return stored === 'null' ? null : (stored || null);
+  });
 
   const { data: projects = [] } = useQuery({
     queryKey: ['projects', user?.email],
@@ -18,26 +19,32 @@ export function ProjectProvider({ children }) {
     staleTime: 60_000,
   });
 
-  // Auto-select first project if stored id no longer exists or nothing stored
+  // Only auto-select if we have a stored ID that no longer exists (deleted project)
   useEffect(() => {
-    if (!projects.length) return;
+    if (!projects.length || activeProjectId === null) return;
     const exists = projects.find(p => p.id === activeProjectId);
     if (!exists) {
-      const id = projects[0].id;
-      setActiveProjectId(id);
-      localStorage.setItem('activeProjectId', id);
+      setActiveProjectId(null);
+      localStorage.setItem('activeProjectId', 'null');
     }
   }, [projects, activeProjectId]);
 
-  const activeProject = projects.find(p => p.id === activeProjectId) ?? projects[0] ?? null;
+  const activeProject = activeProjectId
+    ? (projects.find(p => p.id === activeProjectId) ?? null)
+    : null;
 
   const selectProject = (id) => {
     setActiveProjectId(id);
-    localStorage.setItem('activeProjectId', id);
+    localStorage.setItem('activeProjectId', id ?? 'null');
+  };
+
+  const clearProject = () => {
+    setActiveProjectId(null);
+    localStorage.setItem('activeProjectId', 'null');
   };
 
   return (
-    <ProjectContext.Provider value={{ projects, activeProject, selectProject }}>
+    <ProjectContext.Provider value={{ projects, activeProject, selectProject, clearProject }}>
       {children}
     </ProjectContext.Provider>
   );

@@ -238,6 +238,8 @@ def invoke_llm(
     system_prompt: Optional[str] = None,
     response_json_schema: Optional[dict] = None,
     add_context_from_internet: bool = False,
+    image_base64: Optional[str] = None,
+    image_media_type: Optional[str] = None,
     **kwargs,
 ) -> Any:
     """Call OpenAI GPT-4o (or return mock data if API key not configured)."""
@@ -265,9 +267,25 @@ def invoke_llm(
 
         final_system = "\n\n".join(sys_parts) if sys_parts else "Be helpful and concise."
 
+        # Build user content — plain text or vision (text + image)
+        if image_base64:
+            media_type = image_media_type or "image/jpeg"
+            user_content = [
+                {"type": "text", "text": prompt},
+                {
+                    "type": "image_url",
+                    "image_url": {
+                        "url": f"data:{media_type};base64,{image_base64}",
+                        "detail": "high",
+                    },
+                },
+            ]
+        else:
+            user_content = prompt
+
         messages = [
             {"role": "system", "content": final_system},
-            {"role": "user", "content": prompt},
+            {"role": "user", "content": user_content},
         ]
 
         # Use JSON mode when a schema is requested

@@ -58,7 +58,7 @@ export default function Layout({ children, currentPageName }) {
   const { user, logout } = useAuth();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
-  const { projects, activeProject } = useActiveProject();
+  const { projects, activeProject, clearProject } = useActiveProject();
 
   const currentMode = MODES.find((m) => m.page === currentPageName);
   const currentTool = TOOLS.find((t) => t.page === currentPageName);
@@ -159,32 +159,23 @@ export default function Layout({ children, currentPageName }) {
               <ChevronRight size={14} className={cn('transition-transform duration-300', collapsed ? '' : 'rotate-180')} />
             </button>
 
-            {/* Workspace breadcrumb — shown when inside a tool (not on Projects hub) */}
-            {!isProjectsHub && (
+            {/* Workspace breadcrumb — shown only when a project is active */}
+            {!isProjectsHub && activeProject && (
               <div className="hidden md:flex items-center gap-1.5 ml-1">
                 <Link
                   to={createPageUrl('Projects')}
+                  onClick={() => clearProject()}
                   className="text-xs text-slate-600 hover:text-slate-400 transition-colors font-medium"
                 >
                   Projects
                 </Link>
-                {activeProject && (
-                  <>
-                    <ChevronRight size={10} className="text-slate-700" />
-                    <span
-                      className="text-xs font-semibold truncate max-w-[200px]"
-                      style={{ color: activeAccent }}
-                    >
-                      {activeProject.title}
-                    </span>
-                  </>
-                )}
-                {!activeProject && (
-                  <>
-                    <ChevronRight size={10} className="text-slate-700" />
-                    <span className="text-xs font-semibold text-slate-400">All Projects</span>
-                  </>
-                )}
+                <ChevronRight size={10} className="text-slate-700" />
+                <span
+                  className="text-xs font-semibold truncate max-w-[200px]"
+                  style={{ color: activeAccent }}
+                >
+                  {activeProject.title}
+                </span>
               </div>
             )}
           </div>
@@ -260,7 +251,7 @@ export default function Layout({ children, currentPageName }) {
           <div className={cn('border-b border-white/5 shrink-0', collapsed ? 'py-3 px-2' : 'p-3')}>
             <Link
               to={createPageUrl('Projects')}
-              onClick={() => setMobileOpen(false)}
+              onClick={() => { setMobileOpen(false); clearProject(); }}
               className={cn(
                 'flex items-center gap-2 rounded-xl text-slate-500 hover:text-slate-300 hover:bg-slate-800/40 transition-colors',
                 collapsed ? 'justify-center py-2' : 'px-3 py-2 mb-2 text-xs font-medium',
@@ -271,32 +262,6 @@ export default function Layout({ children, currentPageName }) {
               {!collapsed && 'All Projects'}
             </Link>
 
-            {!collapsed && activeProject && (
-              <div
-                className="px-3 py-2.5 rounded-xl border"
-                style={{ background: `${activeAccent}10`, borderColor: `${activeAccent}25` }}
-              >
-                <p className="text-[10px] font-bold uppercase tracking-widest mb-0.5" style={{ color: `${activeAccent}99` }}>
-                  Active Workspace
-                </p>
-                <p className="text-sm font-bold text-white truncate leading-snug">{activeProject.title}</p>
-                {activeProject.field && (
-                  <p className="text-xs capitalize mt-0.5" style={{ color: activeAccent }}>
-                    {activeProject.field.replace(/_/g, ' ')}
-                  </p>
-                )}
-              </div>
-            )}
-
-            {!collapsed && !activeProject && (
-              <div className="px-3 py-2.5 rounded-xl bg-slate-800/30 border border-slate-700/20">
-                <p className="text-[10px] font-bold uppercase tracking-widest mb-0.5 text-slate-600">
-                  Workspace
-                </p>
-                <p className="text-sm font-semibold text-slate-300 leading-snug">All Projects</p>
-                <p className="text-xs text-slate-500 mt-0.5">Viewing global data</p>
-              </div>
-            )}
           </div>
         )}
 

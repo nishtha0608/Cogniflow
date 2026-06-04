@@ -228,8 +228,8 @@ export default function VivaSimulator() {
 
   if (!sessionStarted) {
     return (
-      <div className="h-[calc(100vh-3.5rem)] flex items-center justify-center p-6">
-        <div className="max-w-2xl w-full text-center">
+      <div className="h-[calc(100vh-3.5rem)] overflow-y-auto flex items-start justify-center p-6">
+        <div className="max-w-2xl w-full text-center py-6">
           <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-rose-500/20 to-pink-500/20 flex items-center justify-center mx-auto mb-6">
             <GraduationCap size={40} className="text-rose-400" />
           </div>
@@ -382,11 +382,10 @@ export default function VivaSimulator() {
             <Badge className="bg-rose-500/20 text-rose-300">
               Avg Score: {sessionStats.averageScore}%
             </Badge>
-            <Button 
-              variant="outline" 
+            <Button
               size="sm"
               onClick={() => setSessionStarted(false)}
-              className="border-slate-700"
+              className="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-600"
             >
               <RotateCcw size={14} className="mr-2" />
               End Session
@@ -402,7 +401,7 @@ export default function VivaSimulator() {
               <Card className="bg-slate-900/50 border-slate-800">
                 <CardHeader>
                   <div className="flex items-center justify-between">
-                    <Badge variant="outline" className="border-slate-700">
+                    <Badge className="bg-slate-700 text-slate-200 border border-slate-600">
                       {currentQuestion.question_type}
                     </Badge>
                     <div className="flex items-center gap-1">

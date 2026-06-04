@@ -64,11 +64,18 @@ export default function ResearchChat() {
   const [createError, setCreateError] = useState('');
   const [uploadedFile, setUploadedFile] = useState(null); // { name, text, doc_id? }
   const [uploading, setUploading] = useState(false);
+  const [projectDisabled, setProjectDisabled] = useState(false);
   const fileInputRef = useRef(null);
   const messagesEndRef = useRef(null);
   const queryClient = useQueryClient();
   const { user } = useAuth();
-  const { activeProject: currentProject } = useActiveProject();
+  const { activeProject: rawProject } = useActiveProject();
+  const currentProject = projectDisabled ? null : rawProject;
+
+  // Reset toggle whenever user switches projects
+  useEffect(() => {
+    setProjectDisabled(false);
+  }, [rawProject?.id]);
 
   const { data: rawConversations = [], isLoading: loadingConversations } = useQuery({
     queryKey: ['conversations', user?.email, currentProject?.id],
@@ -99,6 +106,17 @@ export default function ResearchChat() {
     },
   });
 
+  const deleteConversationMutation = useMutation({
+    mutationFn: (id) => cogniflow.entities.Conversation.delete(id),
+    onSuccess: (_, deletedId) => {
+      queryClient.invalidateQueries({ queryKey: ['conversations'] });
+      if (activeConversation?.id === deletedId) {
+        setActiveConversation(null);
+        setMessages([]);
+      }
+    },
+  });
+
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
@@ -114,19 +132,27 @@ export default function ResearchChat() {
     if (!file) return;
     setUploading(true);
     try {
-      const text = await extractTextFromFile(file);
-      if (!text) {
-        alert('Could not read this file. Please use PDF or TXT format.');
-        return;
+      const isImage = file.type.startsWith('image/');
+      if (isImage) {
+        const buffer = await file.arrayBuffer();
+        const base64 = btoa(String.fromCharCode(...new Uint8Array(buffer)));
+        const previewUrl = URL.createObjectURL(file);
+        setUploadedFile({ name: file.name, imageBase64: base64, imageMediaType: file.type, previewUrl });
+      } else {
+        const text = await extractTextFromFile(file);
+        if (!text) {
+          alert('Could not read this file. Please use PDF, TXT, or an image format.');
+          return;
+        }
+        let doc_id = null;
+        try {
+          const ingested = await cogniflow.ai.documents.ingest({ doc_text: text, doc_name: file.name });
+          doc_id = ingested?.doc_id ?? null;
+        } catch (_) { /* proceed without RAG */ }
+        setUploadedFile({ name: file.name, text, doc_id });
       }
-      let doc_id = null;
-      try {
-        const ingested = await cogniflow.ai.documents.ingest({ doc_text: text, doc_name: file.name });
-        doc_id = ingested?.doc_id ?? null;
-      } catch (_) { /* proceed without RAG */ }
-      setUploadedFile({ name: file.name, text, doc_id });
     } catch (err) {
-      alert(`Failed to read document: ${err.message || 'Please try again.'}`);
+      alert(`Failed to read file: ${err.message || 'Please try again.'}`);
     } finally {
       setUploading(false);
       e.target.value = '';
@@ -136,6 +162,9 @@ export default function ResearchChat() {
   const handleFileRemove = async () => {
     if (uploadedFile?.doc_id) {
       try { await cogniflow.ai.documents.delete(uploadedFile.doc_id); } catch (_) {}
+    }
+    if (uploadedFile?.previewUrl) {
+      URL.revokeObjectURL(uploadedFile.previewUrl);
     }
     setUploadedFile(null);
   };
@@ -172,13 +201,17 @@ export default function ResearchChat() {
       doc_id: uploadedFile?.doc_id,
       doc_text: uploadedFile?.doc_id ? undefined : uploadedFile?.text?.slice(0, 12000),
       doc_name: uploadedFile?.name,
-      project_title: currentProject?.title,
-      project_field: currentProject?.field,
-      project_abstract: currentProject?.abstract,
-      project_research_questions: currentProject?.research_questions,
-      project_keywords: currentProject?.keywords,
-      project_stage: currentProject?.stage,
-      project_target_journal: currentProject?.target_journal,
+      image_base64: uploadedFile?.imageBase64,
+      image_media_type: uploadedFile?.imageMediaType,
+      ...(currentProject ? {
+        project_title: currentProject.title,
+        project_field: currentProject.field,
+        project_abstract: currentProject.abstract,
+        project_research_questions: currentProject.research_questions,
+        project_keywords: currentProject.keywords,
+        project_stage: currentProject.stage,
+        project_target_journal: currentProject.target_journal,
+      } : {}),
     });
 
     const assistantMessage = {
@@ -187,7 +220,7 @@ export default function ResearchChat() {
       timestamp: new Date().toISOString(),
       metadata: {
         suggestions: response.suggestions,
-        confidence: response.confidence,
+        confidence: response.confidence <= 1 ? Math.round(response.confidence * 100) : response.confidence,
         sources_needed: response.sources_needed
       }
     };
@@ -253,26 +286,32 @@ export default function ResearchChat() {
         <ScrollArea className="flex-1">
           <div className="p-3 space-y-2">
             {conversations.map((conv) => (
-              <button
+              <div
                 key={conv.id}
-                onClick={() => setActiveConversation(conv)}
                 className={cn(
-                  "w-full text-left p-3 rounded-lg transition-all",
+                  "w-full text-left p-3 rounded-lg transition-all cursor-pointer",
                   activeConversation?.id === conv.id
                     ? "bg-emerald-500/20 border border-emerald-500/30"
                     : "bg-slate-800/30 hover:bg-slate-800/50 border border-transparent"
                 )}
+                onClick={() => setActiveConversation(conv)}
               >
                 <div className="flex items-start gap-2">
                   <MessageSquare size={16} className="text-slate-400 mt-0.5 flex-shrink-0" />
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-white truncate">{conv.title}</p>
+                    <p className="text-sm font-medium text-white break-words">{conv.title}</p>
                     <p className="text-xs text-slate-500 mt-1">
                       {conv.messages?.length || 0} messages
                     </p>
                   </div>
+                  <button
+                    onClick={(e) => { e.stopPropagation(); deleteConversationMutation.mutate(conv.id); }}
+                    className="flex-shrink-0 text-slate-500 hover:text-red-400 transition-colors p-1 rounded mt-0.5"
+                  >
+                    <Trash2 size={13} />
+                  </button>
                 </div>
-              </button>
+              </div>
             ))}
           </div>
         </ScrollArea>
@@ -299,6 +338,20 @@ export default function ResearchChat() {
               </SelectContent>
             </Select>
             <p className="text-sm text-slate-400">{currentMode?.description}</p>
+            {rawProject && (
+              <button
+                onClick={() => setProjectDisabled(p => !p)}
+                className={cn(
+                  "ml-auto flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-full border transition-all",
+                  !projectDisabled
+                    ? "bg-emerald-500/20 border-emerald-500/30 text-emerald-300"
+                    : "bg-slate-800 border-slate-700 text-slate-400"
+                )}
+              >
+                <BookOpen size={11} />
+                {!projectDisabled ? `Project: ${rawProject.title.slice(0, 20)}` : 'Project: Off'}
+              </button>
+            )}
           </div>
         </div>
 
@@ -347,7 +400,11 @@ export default function ResearchChat() {
             {uploadedFile && (
               <div className="flex items-center justify-between mb-2 px-3 py-2 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
                 <div className="flex items-center gap-2 text-sm text-emerald-300">
-                  <FileText size={14} />
+                  {uploadedFile.previewUrl ? (
+                    <img src={uploadedFile.previewUrl} alt="preview" className="w-8 h-8 rounded object-cover border border-emerald-500/30" />
+                  ) : (
+                    <FileText size={14} />
+                  )}
                   <span className="truncate max-w-xs">{uploadedFile.name}</span>
                 </div>
                 <button onClick={handleFileRemove} className="text-slate-400 hover:text-white ml-2">
@@ -371,10 +428,10 @@ export default function ResearchChat() {
               />
               <div className="flex flex-col gap-2 self-end">
                 <label className="cursor-pointer">
-                  <input ref={fileInputRef} type="file" accept=".pdf,.txt,.doc,.docx" onChange={handleFileUpload} className="hidden" />
-                  <Button variant="outline" size="icon" className="border-slate-700" asChild>
-                    <span>{uploading ? <Loader2 size={16} className="animate-spin" /> : <Paperclip size={16} />}</span>
-                  </Button>
+                  <input ref={fileInputRef} type="file" accept=".pdf,.txt,.doc,.docx,image/*" onChange={handleFileUpload} className="hidden" />
+                  <div className="h-9 w-9 flex items-center justify-center rounded-md border border-slate-700 bg-transparent hover:bg-slate-800 text-slate-300 transition-colors">
+                    {uploading ? <Loader2 size={16} className="animate-spin" /> : <Paperclip size={16} />}
+                  </div>
                 </label>
                 <Button
                   onClick={handleSendMessage}
