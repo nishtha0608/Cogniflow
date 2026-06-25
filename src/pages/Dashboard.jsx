@@ -33,6 +33,7 @@ import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { useActiveProject } from '@/lib/ProjectContext';
+import { cn } from '@/lib/utils';
 
 // ── Animated counter ───────────────────────────────────────────────────────────
 
@@ -806,10 +807,10 @@ function ActionCard({ title, description, icon: Icon, color }) {
         <Icon size={17} />
       </div>
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-medium text-gray-900">{title}</p>
-        <p className="text-xs text-gray-400">{description}</p>
+        <p className="text-sm font-medium text-gray-900 dark:text-white">{title}</p>
+        <p className="text-xs text-gray-400 dark:text-slate-500">{description}</p>
       </div>
-      <ArrowRight size={15} className="text-gray-400 group-hover:text-gray-900 transition-colors shrink-0" />
+      <ArrowRight size={15} className="text-gray-400 dark:text-slate-500 group-hover:text-gray-900 dark:group-hover:text-white transition-colors shrink-0" />
     </div>
   );
 }
@@ -823,13 +824,10 @@ function TimelineItem({ time, event, type, isLast }) {
         {!isLast && <div className="w-px flex-1 bg-gray-100 mt-1 mb-0" style={{ minHeight: 24 }} />}
       </div>
       <div className={`flex-1 pb-4 ${isLast ? '' : ''}`}>
-        <p className="text-sm text-gray-700 group-hover:text-gray-900 transition-colors">{event}</p>
-        <p className="text-xs text-gray-400 mt-0.5">{new Date(time).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}</p>
+        <p className="text-sm text-gray-700 dark:text-slate-300 group-hover:text-gray-900 dark:group-hover:text-white transition-colors">{event}</p>
+        <p className="text-xs text-gray-400 dark:text-slate-500 mt-0.5">{new Date(time).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}</p>
       </div>
     </div>
   );
 }
 
-function cn(...classes) {
-  return classes.filter(Boolean).join(' ');
-}

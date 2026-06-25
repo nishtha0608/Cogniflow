@@ -4,10 +4,9 @@ import { extractTextFromFile } from '@/lib/extractDocText';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@/lib/AuthContext';
 import { useActiveProject } from '@/lib/ProjectContext';
-import { 
+import {
   GraduationCap,
   Play,
-  Pause,
   RotateCcw,
   MessageCircle,
   Clock,
@@ -16,9 +15,6 @@ import {
   Target,
   Loader2,
   ChevronRight,
-  Volume2,
-  VolumeX,
-  Award,
   TrendingUp,
   Brain,
   FileText,
@@ -45,17 +41,6 @@ const EXAMINER_TYPES = [
   { id: 'neutral', name: 'Neutral Examiner', description: 'Fair and balanced approach', stress: 2 },
   { id: 'challenging', name: 'Challenging Examiner', description: 'Probing and rigorous', stress: 3 },
   { id: 'skeptical', name: 'Skeptical Examiner', description: 'Critical and questioning', stress: 4 },
-];
-
-const QUESTION_TYPES = [
-  'Opening Questions',
-  'Research Design',
-  'Methodology',
-  'Findings',
-  'Contribution',
-  'Limitations',
-  'Future Work',
-  'Defense Questions',
 ];
 
 export default function VivaSimulator() {

@@ -3,39 +3,25 @@ import { cogniflow } from '@/api/cogniflowClient';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useActiveProject } from '@/lib/ProjectContext';
 import {
-  Save,
   FileText,
   Bold,
   Italic,
   List,
   ListOrdered,
   Quote,
-  Code,
-  Link2,
   Image,
   Heading1,
   Heading2,
-  Heading3,
-  AlignLeft,
-  AlignCenter,
-  AlignRight,
-  Undo,
-  Redo,
   Download,
-  Upload,
   Sparkles,
-  Copy,
   CheckCircle,
   AlertTriangle,
   BookOpen,
   Plus,
-  ChevronRight,
-  Settings,
   Eye,
   Edit3,
   Loader2,
   FileCode,
-  Type,
   Bot,
   ShieldCheck,
   X,
@@ -47,22 +33,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { cn } from '@/lib/utils';
 import debounce from 'lodash/debounce';
 import ReactMarkdown from 'react-markdown';
@@ -204,8 +175,7 @@ export default function Writing() {
           papers_count: applyRes.papers_used?.length || 0,
         });
       }
-    } catch (e) {
-      console.error('AI Improve failed:', e);
+    } catch (_) {
     } finally {
       setIsAnalyzing(false);
       setIsApplying(false);
@@ -228,8 +198,7 @@ export default function Writing() {
         concerns_count: response.concerns?.length ?? 0,
         summary: response.summary,
       });
-    } catch (e) {
-      console.error('Plagiarism check failed:', e);
+    } catch (_) {
     } finally {
       setIsPlagChecking(false);
     }
@@ -251,8 +220,7 @@ export default function Writing() {
         changes: response.changes ?? [],
         humanized_text: response.humanized_text,
       });
-    } catch (e) {
-      console.error('Humanize failed:', e);
+    } catch (_) {
     } finally {
       setIsHumanizing(false);
     }
@@ -276,8 +244,7 @@ export default function Writing() {
           papers_count: response.papers_used?.length || 0,
         });
       }
-    } catch (e) {
-      console.error('Apply improvements failed:', e);
+    } catch (_) {
     } finally {
       setIsApplying(false);
     }
@@ -296,8 +263,7 @@ export default function Writing() {
         setPlagiarismScore(null);
         setBriefReport(null);
       }
-    } catch (e) {
-      console.error('Rephrase failed:', e);
+    } catch (_) {
     } finally {
       setIsRephrasing(false);
     }

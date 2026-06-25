@@ -255,8 +255,7 @@ export default function ResearchCouncil() {
       const completed = { ...newSession, response: result };
       setSessions((prev) => prev.map((s) => (s.id === newSession.id ? completed : s)));
       setCouncilResponse(result);
-    } catch (e) {
-      console.error('Council error:', e);
+    } catch (_) {
     } finally {
       setIsLoading(false);
     }

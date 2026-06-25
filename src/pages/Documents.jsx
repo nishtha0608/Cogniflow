@@ -102,8 +102,8 @@ export default function Documents() {
               }
             }
           });
-        } catch (e) {
-          console.log('Could not extract PDF content');
+        } catch (_) {
+          // PDF text extraction unavailable — word count will be 0
         }
       }
 

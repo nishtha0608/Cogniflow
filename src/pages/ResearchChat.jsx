@@ -10,9 +10,7 @@ import {
   Trash2,
   MessageSquare,
   Brain,
-  Sparkles,
   FileText,
-  Upload,
   Loader2,
   ChevronDown,
   ChevronUp,
@@ -27,9 +25,7 @@ import {
   Layers,
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
@@ -81,7 +77,7 @@ export default function ResearchChat() {
     setProjectDisabled(false);
   }, [rawProject?.id]);
 
-  const { data: rawConversations = [], isLoading: loadingConversations } = useQuery({
+  const { data: rawConversations = [] } = useQuery({
     queryKey: ['conversations', user?.email, currentProject?.id],
     queryFn: () => cogniflow.entities.Conversation.list('-updated_date', 50),
     enabled: !!user,
@@ -251,18 +247,6 @@ export default function ResearchChat() {
       if (currentProject?.id) convData.project_id = currentProject.id;
       createConversationMutation.mutate(convData);
     }
-  };
-
-  const buildSystemPrompt = (mode, project) => {
-    let prompt = `You are an expert research assistant specializing in ${mode?.name}. `;
-    if (project) {
-      prompt += `The researcher is working on: "${project.title}" in the field of ${project.field}. `;
-      if (project.research_questions?.length) {
-        prompt += `Their research questions are: ${project.research_questions.join(', ')}. `;
-      }
-    }
-    prompt += `Provide academically rigorous, well-structured responses. Always cite when possible and indicate uncertainty clearly.`;
-    return prompt;
   };
 
   const currentMode = RESEARCH_MODES.find(m => m.id === researchMode);

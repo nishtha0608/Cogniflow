@@ -60,8 +60,7 @@ function CitationModal({ paper, onClose }) {
 
   const handleStyle = (s) => { setStyle(s); generate(s); };
 
-  // Generate on mount
-  useState(() => { generate('apa'); });
+  useEffect(() => { generate('apa'); }, [generate]);
 
   return (
     <Dialog open onOpenChange={onClose}>
@@ -133,8 +132,7 @@ function AddToProjectModal({ paper, onClose }) {
         concepts: paper.concepts || [],
       });
       setSaved(s => ({ ...s, [project.id]: true }));
-    } catch (e) {
-      console.error('Failed to save citation', e);
+    } catch (_) {
     } finally {
       setSaving(null);
     }
