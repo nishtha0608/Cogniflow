@@ -51,7 +51,7 @@ function ScoreArc({ score }) {
         <text x="70" y="62" textAnchor="middle" fill="white" fontSize="26" fontWeight="900">{score}</text>
         <text x="70" y="76" textAnchor="middle" fill={color} fontSize="9" fontWeight="700">{label.toUpperCase()}</text>
       </svg>
-      <span className="text-xs text-slate-500">Breakthrough probability</span>
+      <span className="text-xs text-gray-400">Breakthrough probability</span>
     </div>
   );
 }
@@ -68,7 +68,7 @@ function FactorRow({ factor }) {
         : <TrendingDown size={14} className="text-rose-400 mt-0.5 shrink-0" />}
       <div className="flex-1 min-w-0">
         <div className="flex items-center justify-between gap-2">
-          <span className="text-sm font-semibold text-white truncate">{factor.factor}</span>
+          <span className="text-sm font-semibold text-gray-900 truncate">{factor.factor}</span>
           <span className={cn(
             'text-xs font-bold shrink-0',
             positive ? 'text-emerald-400' : 'text-rose-400'
@@ -76,7 +76,7 @@ function FactorRow({ factor }) {
             {positive ? '+' : ''}{factor.score_contribution}
           </span>
         </div>
-        <p className="text-xs text-slate-400 mt-0.5">{factor.impact}</p>
+        <p className="text-xs text-gray-500 mt-0.5">{factor.impact}</p>
       </div>
     </div>
   );
@@ -126,7 +126,7 @@ export default function BreakthroughOracle() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 p-6 md:p-8">
+    <div className="min-h-screen bg-violet-50 p-6 md:p-8">
       <div className="max-w-3xl mx-auto space-y-8">
 
         {/* Header */}
@@ -135,31 +135,31 @@ export default function BreakthroughOracle() {
             <Flame size={20} className="text-white" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-white">Breakthrough Oracle</h1>
-            <p className="text-sm text-slate-500">Scores your hypothesis on breakthrough probability and maps the path to impact</p>
+            <h1 className="text-2xl font-bold text-gray-900">Breakthrough Oracle</h1>
+            <p className="text-sm text-gray-400">Scores your hypothesis on breakthrough probability and maps the path to impact</p>
           </div>
         </div>
 
         {/* Input */}
-        <div className="rounded-2xl bg-slate-900/60 border border-white/5 p-5 space-y-4">
+        <div className="rounded-2xl bg-white/80 border border-gray-200 p-5 space-y-4">
           <div className="space-y-2">
-            <label className="text-sm font-medium text-slate-400">Your hypothesis or research claim</label>
+            <label className="text-sm font-medium text-gray-500">Your hypothesis or research claim</label>
             <textarea
               value={hypothesis}
               onChange={e => setHypothesis(e.target.value)}
               onKeyDown={e => { if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) run(); }}
               placeholder="State your hypothesis as clearly and boldly as you can…"
-              className="w-full bg-slate-800/60 border border-slate-700/40 rounded-xl px-4 py-3 text-sm text-white placeholder-slate-500 resize-none focus:outline-none focus:border-orange-500/40 transition-colors"
+              className="w-full bg-gray-100 border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900 placeholder-slate-500 resize-none focus:outline-none focus:border-orange-500/40 transition-colors"
               rows={3}
             />
           </div>
           <div className="space-y-2">
-            <label className="text-sm font-medium text-slate-400">Research area (optional)</label>
+            <label className="text-sm font-medium text-gray-500">Research area (optional)</label>
             <input
               value={researchArea}
               onChange={e => setResearchArea(e.target.value)}
               placeholder="e.g. Cognitive Psychology, Machine Learning, Climate Science…"
-              className="w-full bg-slate-800/60 border border-slate-700/40 rounded-xl px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-orange-500/40 transition-colors"
+              className="w-full bg-gray-100 border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-900 placeholder-slate-500 focus:outline-none focus:border-orange-500/40 transition-colors"
             />
           </div>
 
@@ -168,7 +168,7 @@ export default function BreakthroughOracle() {
               <button
                 key={h}
                 onClick={() => setHypothesis(h)}
-                className="text-xs px-2.5 py-1 rounded-full bg-slate-800 border border-slate-700/40 text-slate-400 hover:text-slate-200 hover:bg-slate-700 transition-colors"
+                className="text-xs px-2.5 py-1 rounded-full bg-gray-100 border border-gray-200 text-gray-500 hover:text-gray-800 hover:bg-gray-200 transition-colors"
               >
                 {h.slice(0, 52)}…
               </button>
@@ -182,7 +182,7 @@ export default function BreakthroughOracle() {
               'w-full flex items-center justify-center gap-2 py-3 rounded-xl font-semibold text-sm transition-all',
               hypothesis.trim() && !loading
                 ? 'bg-gradient-to-r from-orange-500 to-rose-600 text-white hover:opacity-90 shadow-lg shadow-orange-500/20'
-                : 'bg-slate-800 text-slate-500 cursor-not-allowed'
+                : 'bg-gray-100 text-gray-400 cursor-not-allowed'
             )}
           >
             {loading ? <Loader2 size={15} className="animate-spin" /> : <Flame size={15} />}
@@ -199,14 +199,14 @@ export default function BreakthroughOracle() {
               className="space-y-5"
             >
               {/* Score + verdict */}
-              <div className="rounded-2xl bg-slate-900/60 border border-white/5 p-6 flex flex-col sm:flex-row items-center gap-6">
+              <div className="rounded-2xl bg-white/80 border border-gray-200 p-6 flex flex-col sm:flex-row items-center gap-6">
                 <ScoreArc score={result.score} />
                 <div className="flex-1 space-y-2">
-                  <p className="text-sm font-semibold text-white">Verdict</p>
-                  <p className="text-sm text-slate-300 leading-relaxed">{result.verdict}</p>
+                  <p className="text-sm font-semibold text-gray-900">Verdict</p>
+                  <p className="text-sm text-gray-700 leading-relaxed">{result.verdict}</p>
                   <button
                     onClick={() => { setResult(null); setHypothesis(''); setResearchArea(''); }}
-                    className="flex items-center gap-1.5 text-xs text-slate-500 hover:text-slate-300 transition-colors mt-2"
+                    className="flex items-center gap-1.5 text-xs text-gray-400 hover:text-gray-700 transition-colors mt-2"
                   >
                     <RefreshCw size={11} />
                     Try another hypothesis
@@ -217,10 +217,10 @@ export default function BreakthroughOracle() {
               {/* Factors */}
               {result.factors?.length > 0 && (
                 <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
-                  className="rounded-2xl bg-slate-900/60 border border-white/5 p-5 space-y-3">
+                  className="rounded-2xl bg-white/80 border border-gray-200 p-5 space-y-3">
                   <div className="flex items-center gap-2">
-                    <TrendingUp size={14} className="text-slate-400" />
-                    <span className="text-sm font-semibold text-white">Scoring factors</span>
+                    <TrendingUp size={14} className="text-gray-500" />
+                    <span className="text-sm font-semibold text-gray-900">Scoring factors</span>
                   </div>
                   <div className="space-y-2">
                     {result.factors.map((f, i) => <FactorRow key={i} factor={f} />)}
@@ -235,13 +235,13 @@ export default function BreakthroughOracle() {
                   <div className="flex items-center gap-2">
                     <Puzzle size={14} className="text-amber-400" />
                     <span className="text-sm font-semibold text-amber-400">Missing ingredients</span>
-                    <span className="text-xs text-slate-500 ml-1">— add these to raise your score</span>
+                    <span className="text-xs text-gray-400 ml-1">— add these to raise your score</span>
                   </div>
                   <ul className="space-y-2">
                     {result.missing_ingredients.map((m, i) => (
                       <li key={i} className="flex items-start gap-2.5">
                         <ChevronRight size={13} className="text-amber-400 mt-0.5 shrink-0" />
-                        <span className="text-sm text-slate-300">{m}</span>
+                        <span className="text-sm text-gray-700">{m}</span>
                       </li>
                     ))}
                   </ul>
@@ -255,17 +255,17 @@ export default function BreakthroughOracle() {
                   <div className="flex items-center gap-2">
                     <Lightbulb size={14} className="text-violet-400" />
                     <span className="text-sm font-semibold text-violet-400">Analogous breakthroughs</span>
-                    <span className="text-xs text-slate-500 ml-1">— from other fields</span>
+                    <span className="text-xs text-gray-400 ml-1">— from other fields</span>
                   </div>
                   <div className="space-y-3">
                     {result.analogous_breakthroughs.map((b, i) => (
-                      <div key={i} className="rounded-xl bg-slate-800/40 border border-slate-700/30 p-3 space-y-1.5">
+                      <div key={i} className="rounded-xl bg-gray-100/70 border border-gray-200 p-3 space-y-1.5">
                         <div className="flex items-center gap-2">
                           <ArrowUpRight size={13} className="text-violet-400" />
                           <span className="text-xs font-semibold text-violet-400">{b.field}</span>
                         </div>
-                        <p className="text-sm font-medium text-white">{b.breakthrough}</p>
-                        <p className="text-xs text-slate-400 leading-relaxed">{b.lesson}</p>
+                        <p className="text-sm font-medium text-gray-900">{b.breakthrough}</p>
+                        <p className="text-xs text-gray-500 leading-relaxed">{b.lesson}</p>
                       </div>
                     ))}
                   </div>
@@ -279,7 +279,7 @@ export default function BreakthroughOracle() {
                   <div className="flex items-center gap-2">
                     <Rocket size={14} className="text-emerald-400" />
                     <span className="text-sm font-semibold text-emerald-400">Unlock actions</span>
-                    <span className="text-xs text-slate-500 ml-1">— move the needle now</span>
+                    <span className="text-xs text-gray-400 ml-1">— move the needle now</span>
                   </div>
                   <ol className="space-y-2">
                     {result.unlock_actions.map((a, i) => (
@@ -287,7 +287,7 @@ export default function BreakthroughOracle() {
                         <span className="w-5 h-5 rounded-full bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-xs font-bold text-emerald-400 shrink-0 mt-0.5">
                           {i + 1}
                         </span>
-                        <span className="text-sm text-slate-300">{a}</span>
+                        <span className="text-sm text-gray-700">{a}</span>
                       </li>
                     ))}
                   </ol>

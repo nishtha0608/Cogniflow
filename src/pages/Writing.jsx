@@ -355,8 +355,8 @@ export default function Writing() {
   return (
     <div className="h-[calc(100vh-3.5rem)] flex overflow-hidden">
       {/* Document Sidebar */}
-      <div className="w-56 flex-shrink-0 border-r border-slate-800 bg-slate-900/30 flex flex-col">
-        <div className="p-4 border-b border-slate-800 space-y-2">
+      <div className="w-56 flex-shrink-0 border-r border-gray-200 dark:border-slate-800 bg-white/30 dark:bg-slate-900/30 flex flex-col">
+        <div className="p-4 border-b border-gray-200 dark:border-slate-800 space-y-2">
           <Button
             onClick={handleNewDocument}
             disabled={createDocumentMutation.isPending}
@@ -374,7 +374,7 @@ export default function Writing() {
 
         <ScrollArea className="flex-1">
           <div className="p-3 space-y-2">
-            <p className="text-xs font-semibold text-slate-500 uppercase px-2 mb-2">Documents</p>
+            <p className="text-xs font-semibold text-gray-400 dark:text-slate-500 uppercase px-2 mb-2">Documents</p>
             {documents.map((doc) => (
               <div
                 key={doc.id}
@@ -382,7 +382,7 @@ export default function Writing() {
                   "group w-full text-left p-3 rounded-lg transition-all",
                   activeDocument?.id === doc.id
                     ? "bg-blue-500/20 border border-blue-500/30"
-                    : "bg-slate-800/30 hover:bg-slate-800/50 border border-transparent"
+                    : "bg-white/70 dark:bg-slate-900/70 hover:bg-gray-50 dark:hover:bg-slate-800 border border-transparent"
                 )}
               >
                 {renamingDocId === doc.id ? (
@@ -395,17 +395,17 @@ export default function Writing() {
                       if (e.key === 'Enter') handleRenameSubmit(doc.id);
                       if (e.key === 'Escape') setRenamingDocId(null);
                     }}
-                    className="w-full bg-slate-700 text-white text-sm rounded px-2 py-1 outline-none border border-blue-500/50 focus:border-blue-400"
+                    className="w-full bg-gray-200 text-gray-900 text-sm rounded px-2 py-1 outline-none border border-blue-500/50 focus:border-blue-400"
                   />
                 ) : (
                   <div
                     className="flex items-start gap-2 cursor-pointer"
                     onClick={() => { setActiveDocument(doc); setContent(doc.content || ''); }}
                   >
-                    <FileText size={16} className="text-slate-400 mt-0.5 flex-shrink-0" />
+                    <FileText size={16} className="text-gray-500 mt-0.5 flex-shrink-0" />
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-white leading-snug break-words">{doc.title}</p>
-                      <p className="text-xs text-slate-500 mt-1">{doc.word_count || 0} words</p>
+                      <p className="text-sm font-medium text-gray-900 dark:text-white leading-snug break-words">{doc.title}</p>
+                      <p className="text-xs text-gray-400 dark:text-slate-500 mt-1">{doc.word_count || 0} words</p>
                     </div>
                     <button
                       onClick={e => {
@@ -413,7 +413,7 @@ export default function Writing() {
                         setRenamingDocId(doc.id);
                         setRenameValue(doc.title || '');
                       }}
-                      className="opacity-0 group-hover:opacity-100 text-slate-500 hover:text-white transition-all flex-shrink-0 mt-0.5"
+                      className="opacity-0 group-hover:opacity-100 text-gray-400 hover:text-gray-900 dark:hover:text-white transition-all flex-shrink-0 mt-0.5"
                       title="Rename"
                     >
                       <Pencil size={12} />
@@ -426,8 +426,8 @@ export default function Writing() {
         </ScrollArea>
 
         {/* Section Navigator */}
-        <div className="border-t border-slate-800 p-3">
-          <p className="text-xs font-semibold text-slate-500 uppercase px-2 mb-2">Sections</p>
+        <div className="border-t border-gray-200 dark:border-slate-800 p-3">
+          <p className="text-xs font-semibold text-gray-400 dark:text-slate-500 uppercase px-2 mb-2">Sections</p>
           <div className="space-y-1">
             {DOCUMENT_SECTIONS.map((section) => (
               <button
@@ -437,7 +437,7 @@ export default function Writing() {
                   "w-full text-left px-3 py-1.5 rounded text-sm transition-colors",
                   activeSection === section.id
                     ? "bg-blue-500/20 text-blue-300"
-                    : "text-slate-400 hover:text-white hover:bg-slate-800/50"
+                    : "text-gray-500 dark:text-slate-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-slate-800"
                 )}
               >
                 {section.name}
@@ -450,20 +450,20 @@ export default function Writing() {
       {/* Main Editor Area */}
       <div className="flex-1 min-w-0 flex flex-col overflow-hidden">
         {/* Toolbar */}
-        <div className="p-3 border-b border-slate-800 bg-slate-900/50">
+        <div className="p-3 border-b border-gray-200 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-1">
               {/* Format buttons */}
               <ToolbarButton icon={Bold} tooltip="Bold" />
               <ToolbarButton icon={Italic} tooltip="Italic" />
-              <div className="w-px h-6 bg-slate-700 mx-2" />
+              <div className="w-px h-6 bg-gray-200 dark:bg-slate-700 mx-2" />
               <ToolbarButton icon={Heading1} tooltip="Heading 1" onClick={() => insertTemplate('section')} />
               <ToolbarButton icon={Heading2} tooltip="Heading 2" onClick={() => insertTemplate('subsection')} />
-              <div className="w-px h-6 bg-slate-700 mx-2" />
+              <div className="w-px h-6 bg-gray-200 dark:bg-slate-700 mx-2" />
               <ToolbarButton icon={List} tooltip="Bullet List" />
               <ToolbarButton icon={ListOrdered} tooltip="Numbered List" />
               <ToolbarButton icon={Quote} tooltip="Quote" />
-              <div className="w-px h-6 bg-slate-700 mx-2" />
+              <div className="w-px h-6 bg-gray-200 dark:bg-slate-700 mx-2" />
               <ToolbarButton icon={FileCode} tooltip="Equation" onClick={() => insertTemplate('equation')} />
               <ToolbarButton icon={Image} tooltip="Figure" onClick={() => insertTemplate('figure')} />
               <ToolbarButton icon={BookOpen} tooltip="Citation" onClick={() => insertTemplate('citation')} />
@@ -514,21 +514,21 @@ export default function Writing() {
                 size="sm"
                 onClick={handleExportPDF}
                 disabled={!activeDocument || !content.trim()}
-                className="h-8 bg-slate-700/50 hover:bg-slate-700 text-slate-300 border border-slate-600 hover:border-slate-500"
+                className="h-8 bg-gray-200/50 dark:bg-slate-800/50 hover:bg-gray-200 dark:hover:bg-slate-800 text-gray-700 dark:text-slate-300 border border-gray-300 dark:border-slate-600 hover:border-slate-500"
               >
                 <Download size={13} className="mr-1.5" />
                 Export PDF
               </Button>
 
-              <div className="w-px h-5 bg-slate-700" />
+              <div className="w-px h-5 bg-gray-200" />
 
               {/* View Mode Toggle */}
-              <div className="flex bg-slate-800 rounded-lg p-1">
+              <div className="flex bg-gray-100 dark:bg-slate-800 rounded-lg p-1">
                 <button
                   onClick={() => setViewMode('edit')}
                   className={cn(
                     "px-3 py-1 rounded text-sm transition-colors",
-                    viewMode === 'edit' ? "bg-slate-700 text-white" : "text-slate-400 hover:text-white"
+                    viewMode === 'edit' ? "bg-gray-200 dark:bg-slate-600 text-gray-900 dark:text-white" : "text-gray-500 dark:text-slate-400 hover:text-gray-900 dark:hover:text-white"
                   )}
                 >
                   <Edit3 size={14} />
@@ -537,7 +537,7 @@ export default function Writing() {
                   onClick={() => setViewMode('split')}
                   className={cn(
                     "px-3 py-1 rounded text-sm transition-colors",
-                    viewMode === 'split' ? "bg-slate-700 text-white" : "text-slate-400 hover:text-white"
+                    viewMode === 'split' ? "bg-gray-200 dark:bg-slate-600 text-gray-900 dark:text-white" : "text-gray-500 dark:text-slate-400 hover:text-gray-900 dark:hover:text-white"
                   )}
                 >
                   Split
@@ -546,7 +546,7 @@ export default function Writing() {
                   onClick={() => setViewMode('preview')}
                   className={cn(
                     "px-3 py-1 rounded text-sm transition-colors",
-                    viewMode === 'preview' ? "bg-slate-700 text-white" : "text-slate-400 hover:text-white"
+                    viewMode === 'preview' ? "bg-gray-200 dark:bg-slate-600 text-gray-900 dark:text-white" : "text-gray-500 dark:text-slate-400 hover:text-gray-900 dark:hover:text-white"
                   )}
                 >
                   <Eye size={14} />
@@ -554,7 +554,7 @@ export default function Writing() {
               </div>
 
               {/* Save indicator */}
-              <div className="flex items-center gap-2 text-sm text-slate-400">
+              <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-slate-400">
                 {isSaving ? (
                   <>
                     <Loader2 size={14} className="animate-spin" />
@@ -591,7 +591,7 @@ export default function Writing() {
                 )} />
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
-                    <span className="font-semibold text-white">Plagiarism Report</span>
+                    <span className="font-semibold text-gray-900 dark:text-white">Plagiarism Report</span>
                     <Badge className={cn(
                       "text-xs",
                       briefReport.originality_score >= 80
@@ -606,9 +606,9 @@ export default function Writing() {
                       </Badge>
                     )}
                   </div>
-                  <p className="text-slate-300 leading-snug">{briefReport.summary}</p>
+                  <p className="text-gray-700 dark:text-slate-300 leading-snug">{briefReport.summary}</p>
                   {briefReport.concerns_count > 0 && (
-                    <p className="text-slate-400 text-xs mt-1">See the Analysis panel on the right for full details.</p>
+                    <p className="text-gray-500 dark:text-slate-400 text-xs mt-1">See the Analysis panel on the right for full details.</p>
                   )}
                 </div>
               </>
@@ -617,8 +617,8 @@ export default function Writing() {
                 <Bot size={16} className="mt-0.5 flex-shrink-0 text-blue-400" />
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
-                    <span className="font-semibold text-white">Humanization Report</span>
-                    <Badge className="text-xs bg-slate-700 text-slate-300 border-slate-600">
+                    <span className="font-semibold text-gray-900 dark:text-white">Humanization Report</span>
+                    <Badge className="text-xs bg-gray-200 text-gray-700 border-gray-300">
                       AI risk {briefReport.ai_risk_before}% → {briefReport.ai_risk_after}%
                     </Badge>
                     <Badge className={cn(
@@ -630,7 +630,7 @@ export default function Writing() {
                       {briefReport.ai_risk_after <= 30 ? 'Low detection risk' : 'Moderate detection risk'}
                     </Badge>
                   </div>
-                  <ul className="text-slate-300 space-y-0.5">
+                  <ul className="text-gray-700 dark:text-slate-300 space-y-0.5">
                     {briefReport.changes.slice(0, 4).map((c, i) => (
                       <li key={i} className="flex items-start gap-1.5">
                         <span className="text-blue-400 mt-0.5">•</span>
@@ -655,7 +655,7 @@ export default function Writing() {
             )}
             <button
               onClick={() => setBriefReport(null)}
-              className="text-slate-500 hover:text-white flex-shrink-0 mt-0.5"
+              className="text-gray-400 hover:text-gray-900 dark:hover:text-white flex-shrink-0 mt-0.5"
             >
               <X size={14} />
             </button>
@@ -668,7 +668,7 @@ export default function Writing() {
           {(viewMode === 'edit' || viewMode === 'split') && (
             <div className={cn(
               "flex-1 flex flex-col",
-              viewMode === 'split' && "border-r border-slate-800"
+              viewMode === 'split' && "border-r border-gray-200 dark:border-slate-800"
             )}>
               {activeDocument ? (
                 <div className="flex-1 p-4">
@@ -688,15 +688,15 @@ export default function Writing() {
                     value={content}
                     onChange={(e) => setContent(e.target.value)}
                     placeholder="Start writing your research..."
-                    className="flex-1 w-full h-full min-h-[500px] bg-slate-900/50 border-slate-700 font-mono text-sm resize-none"
+                    className="flex-1 w-full h-full min-h-[500px] bg-white/50 dark:bg-slate-900/50 border-gray-300 dark:border-slate-700 dark:text-slate-100 font-mono text-sm resize-none"
                   />
                 </div>
               ) : (
                 <div className="flex-1 flex items-center justify-center text-center">
                   <div>
-                    <FileText size={48} className="mx-auto text-slate-600 mb-4" />
-                    <h3 className="text-lg font-medium text-white mb-2">No Document Selected</h3>
-                    <p className="text-slate-400 mb-4">Create a new document or select one from the sidebar</p>
+                    <FileText size={48} className="mx-auto text-gray-400 dark:text-slate-500 mb-4" />
+                    <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">No Document Selected</h3>
+                    <p className="text-gray-500 dark:text-slate-400 mb-4">Create a new document or select one from the sidebar</p>
                     <Button onClick={handleNewDocument} disabled={createDocumentMutation.isPending}>
                       {createDocumentMutation.isPending
                         ? <Loader2 size={16} className="mr-2 animate-spin" />
@@ -711,7 +711,7 @@ export default function Writing() {
 
           {/* Preview */}
           {(viewMode === 'preview' || viewMode === 'split') && (
-            <div className="flex-1 p-6 overflow-auto bg-slate-950">
+            <div className="flex-1 p-6 overflow-auto bg-violet-50">
               <div className="max-w-3xl mx-auto prose prose-invert prose-sm">
                 <ReactMarkdown>{content || '*No content yet*'}</ReactMarkdown>
               </div>
@@ -720,8 +720,8 @@ export default function Writing() {
         </div>
 
         {/* Bottom Stats Bar */}
-        <div className="px-4 py-2 border-t border-slate-800 bg-slate-900/50 flex items-center text-sm">
-          <div className="flex items-center gap-4 text-slate-400">
+        <div className="px-4 py-2 border-t border-gray-200 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 flex items-center text-sm">
+          <div className="flex items-center gap-4 text-gray-500 dark:text-slate-400">
             <span>{countWords(content)} words</span>
             <span>{content.length} characters</span>
           </div>
@@ -730,12 +730,12 @@ export default function Writing() {
 
       {/* AI Suggestions Panel */}
       {(aiSuggestions.length > 0 || plagiarismScore || applyResult) && (
-        <div className="w-72 flex-shrink-0 border-l border-slate-800 bg-slate-900/30 flex flex-col overflow-hidden">
-          <div className="p-4 border-b border-slate-800 flex items-center justify-between">
-            <h3 className="font-semibold text-white">AI Analysis</h3>
+        <div className="w-72 flex-shrink-0 border-l border-gray-200 dark:border-slate-800 bg-white/30 dark:bg-slate-900/30 flex flex-col overflow-hidden">
+          <div className="p-4 border-b border-gray-200 dark:border-slate-800 flex items-center justify-between">
+            <h3 className="font-semibold text-gray-900 dark:text-white">AI Analysis</h3>
             <button
               onClick={() => { setAiSuggestions([]); setPlagiarismScore(null); setApplyResult(null); }}
-              className="text-slate-500 hover:text-white transition-colors"
+              className="text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
             >
               <X size={14} />
             </button>
@@ -747,14 +747,14 @@ export default function Writing() {
                   <div className="flex items-start gap-2">
                     <CheckCircle size={15} className="text-emerald-400 mt-0.5 flex-shrink-0" />
                     <div>
-                      <p className="text-sm font-semibold text-white">Document improved</p>
+                      <p className="text-sm font-semibold text-gray-900 dark:text-white">Document improved</p>
                       {applyResult.citations_added > 0 ? (
-                        <p className="text-xs text-slate-300 mt-0.5">
+                        <p className="text-xs text-gray-700 dark:text-slate-300 mt-0.5">
                           {applyResult.citations_added} inline citation{applyResult.citations_added !== 1 ? 's' : ''} inserted
                           {applyResult.papers_count > 0 && ` from ${applyResult.papers_count} papers`} · References section added
                         </p>
                       ) : (
-                        <p className="text-xs text-slate-300 mt-0.5">All suggestions applied. No matching papers found for citations.</p>
+                        <p className="text-xs text-gray-700 dark:text-slate-300 mt-0.5">All suggestions applied. No matching papers found for citations.</p>
                       )}
                     </div>
                   </div>
@@ -762,7 +762,7 @@ export default function Writing() {
               </Card>
             )}
             {plagiarismScore && (
-              <Card className="mb-4 bg-slate-800/50 border-slate-700">
+              <Card className="mb-4 bg-gray-50 dark:bg-slate-800 border-gray-300 dark:border-slate-700">
                 <CardHeader className="pb-2">
                   <CardTitle className="text-sm flex items-center gap-2">
                     <CheckCircle size={14} className={plagiarismScore.originality_score >= 80 ? "text-emerald-400" : "text-amber-400"} />
@@ -770,17 +770,17 @@ export default function Writing() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-3xl font-bold text-white mb-2">
+                  <div className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
                     {plagiarismScore.originality_score}%
                   </div>
                   <Progress value={plagiarismScore.originality_score} className="h-2 mb-3" />
-                  <p className="text-xs text-slate-400">{plagiarismScore.summary}</p>
+                  <p className="text-xs text-gray-500 dark:text-slate-400">{plagiarismScore.summary}</p>
                   {plagiarismScore.concerns?.length > 0 && (
                     <div className="mt-3 space-y-2">
                       {plagiarismScore.concerns.slice(0, 3).map((concern, i) => (
                         <div key={i} className="p-2 bg-amber-500/10 rounded border border-amber-500/20">
                           <p className="text-xs font-medium text-amber-300">"{concern.text}"</p>
-                          <p className="text-xs text-slate-400 mt-1">{concern.suggestion}</p>
+                          <p className="text-xs text-gray-500 mt-1">{concern.suggestion}</p>
                         </div>
                       ))}
                       <Button
@@ -802,7 +802,7 @@ export default function Writing() {
 
             {aiSuggestions.length > 0 && (
               <div className="space-y-3">
-                <h4 className="text-sm font-medium text-slate-400">Suggestions</h4>
+                <h4 className="text-sm font-medium text-gray-500 dark:text-slate-400">Suggestions</h4>
                 {aiSuggestions.map((suggestion, i) => (
                   <div
                     key={i}
@@ -820,13 +820,13 @@ export default function Writing() {
                         "text-blue-400"
                       )} />
                       <div>
-                        <p className="text-xs font-medium text-white capitalize">{suggestion.type}</p>
-                        <p className="text-xs text-slate-300 mt-1">{suggestion.text}</p>
+                        <p className="text-xs font-medium text-gray-900 dark:text-white capitalize">{suggestion.type}</p>
+                        <p className="text-xs text-gray-700 dark:text-slate-300 mt-1">{suggestion.text}</p>
                       </div>
                     </div>
                   </div>
                 ))}
-                <div className="mt-3 pt-3 border-t border-slate-700/50">
+                <div className="mt-3 pt-3 border-t border-gray-300/50 dark:border-slate-700/50">
                   <Button
                     className="w-full bg-blue-600 hover:bg-blue-700 text-white"
                     size="sm"
@@ -852,7 +852,7 @@ function ToolbarButton({ icon: Icon, tooltip, onClick }) {
   return (
     <button
       onClick={onClick}
-      className="p-2 hover:bg-slate-800 rounded transition-colors text-slate-400 hover:text-white"
+      className="p-2 hover:bg-gray-100 dark:hover:bg-slate-800 rounded transition-colors text-gray-500 dark:text-slate-400 hover:text-gray-900 dark:hover:text-white"
       title={tooltip}
     >
       <Icon size={16} />

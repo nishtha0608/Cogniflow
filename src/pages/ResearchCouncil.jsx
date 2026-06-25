@@ -152,7 +152,7 @@ function AgentCard({ agent, response, isLoading, revealDelay }) {
           </div>
           <div>
             <h3 className={cn('font-bold text-sm', agent.text)}>{agent.name}</h3>
-            <p className="text-xs text-slate-500">{agent.title}</p>
+            <p className="text-xs text-gray-400 dark:text-slate-500">{agent.title}</p>
           </div>
         </div>
         <div className="flex items-center gap-2">
@@ -169,9 +169,9 @@ function AgentCard({ agent, response, isLoading, revealDelay }) {
             </div>
           )}
           {expanded ? (
-            <ChevronUp size={16} className="text-slate-500" />
+            <ChevronUp size={16} className="text-gray-400" />
           ) : (
-            <ChevronDown size={16} className="text-slate-500" />
+            <ChevronDown size={16} className="text-gray-400" />
           )}
         </div>
       </div>
@@ -200,7 +200,7 @@ function AgentCard({ agent, response, isLoading, revealDelay }) {
                 </div>
               ) : response ? (
                 <>
-                  <p className="text-sm text-slate-300 leading-relaxed">
+                  <p className="text-sm text-gray-700 dark:text-slate-300 leading-relaxed">
                     <TypedText text={response.response} delay={revealDelay * 200} speed={8} />
                   </p>
                   {response.key_point && (
@@ -213,7 +213,7 @@ function AgentCard({ agent, response, isLoading, revealDelay }) {
                   )}
                 </>
               ) : (
-                <p className="text-sm text-slate-600 italic py-2">{agent.description}</p>
+                <p className="text-sm text-gray-400 dark:text-slate-500 italic py-2">{agent.description}</p>
               )}
             </div>
           </motion.div>
@@ -279,15 +279,15 @@ export default function ResearchCouncil() {
   return (
     <div className="min-h-screen flex">
       {/* Sessions Sidebar */}
-      <aside className="hidden xl:flex flex-col w-72 border-r border-slate-800/50 bg-slate-900/30 p-4 gap-3">
+      <aside className="hidden xl:flex flex-col w-72 border-r border-gray-200 dark:border-slate-800 bg-white/30 dark:bg-slate-900/30 p-4 gap-3">
         <div className="flex items-center gap-2 px-1 py-2">
           <Users size={16} className="text-violet-400" />
-          <span className="text-sm font-semibold text-slate-300">Council Sessions</span>
+          <span className="text-sm font-semibold text-gray-700 dark:text-slate-300">Council Sessions</span>
         </div>
 
         {sessions.length === 0 ? (
           <div className="flex-1 flex items-center justify-center">
-            <p className="text-xs text-slate-600 text-center px-4">
+            <p className="text-xs text-gray-400 dark:text-slate-500 text-center px-4">
               Your council sessions will appear here
             </p>
           </div>
@@ -301,11 +301,11 @@ export default function ResearchCouncil() {
                   'w-full text-left p-3 rounded-xl border text-xs transition-all',
                   activeSession === session.id
                     ? 'bg-violet-500/15 border-violet-500/40 text-violet-300'
-                    : 'bg-slate-800/30 border-slate-700/30 text-slate-400 hover:bg-slate-800/50',
+                    : 'bg-white/70 dark:bg-slate-800/70 border-gray-200 dark:border-slate-700 text-gray-500 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-800',
                 )}
               >
                 <p className="font-medium line-clamp-2 mb-1">{session.question}</p>
-                <p className="text-slate-600">{session.timestamp}</p>
+                <p className="text-gray-400 dark:text-slate-500">{session.timestamp}</p>
               </button>
             ))}
           </div>
@@ -321,8 +321,8 @@ export default function ResearchCouncil() {
               <Users size={24} className="text-white" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-white tracking-tight">Research Council</h1>
-              <p className="text-slate-400 mt-1 text-sm">
+              <h1 className="text-2xl font-bold text-gray-900 dark:text-white tracking-tight">Research Council</h1>
+              <p className="text-gray-500 dark:text-slate-400 mt-1 text-sm">
                 Four expert AI minds — The Synthesizer, The Skeptic, The Visionary, The Pragmatist —
                 analyse your research question from every angle simultaneously.
               </p>
@@ -344,7 +344,7 @@ export default function ResearchCouncil() {
                     </div>
                     <span className={cn('text-xs font-semibold', agent.text)}>{agent.name}</span>
                   </div>
-                  <p className="text-xs text-slate-500 leading-tight">{agent.description}</p>
+                  <p className="text-xs text-gray-400 dark:text-slate-500 leading-tight">{agent.description}</p>
                 </div>
               );
             })}
@@ -352,14 +352,14 @@ export default function ResearchCouncil() {
 
           {/* Question Input */}
           <div className="relative mb-6">
-            <div className="rounded-2xl border border-slate-700/50 bg-slate-900/80 backdrop-blur-sm overflow-hidden focus-within:border-violet-500/60 transition-all">
+            <div className="rounded-2xl border border-gray-300/50 dark:border-slate-700/50 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm overflow-hidden focus-within:border-violet-500/60 transition-all">
               <Textarea
                 ref={textareaRef}
                 value={question}
                 onChange={(e) => setQuestion(e.target.value)}
                 onKeyDown={handleKeyDown}
                 placeholder="Ask your research question... (⌘+Enter to submit)"
-                className="border-0 bg-transparent resize-none text-slate-200 placeholder-slate-600 p-4 pb-2 min-h-[100px] text-sm focus-visible:ring-0"
+                className="border-0 bg-transparent resize-none text-gray-800 dark:text-slate-100 placeholder-slate-600 dark:placeholder-slate-500 p-4 pb-2 min-h-[100px] text-sm focus-visible:ring-0"
                 disabled={isLoading}
               />
               <div className="flex items-center justify-between px-4 pb-3">
@@ -368,7 +368,7 @@ export default function ResearchCouncil() {
                     variant="ghost"
                     size="sm"
                     onClick={() => setShowExamples(!showExamples)}
-                    className="text-slate-500 hover:text-slate-300 text-xs gap-1.5 h-8"
+                    className="text-gray-400 hover:text-gray-700 text-xs gap-1.5 h-8"
                   >
                     <Lightbulb size={12} />
                     Example questions
@@ -380,7 +380,7 @@ export default function ResearchCouncil() {
                         initial={{ opacity: 0, y: -8 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -8 }}
-                        className="absolute bottom-10 left-0 w-80 z-10 rounded-xl border border-slate-700 bg-slate-900 shadow-2xl p-3 space-y-1"
+                        className="absolute bottom-10 left-0 w-80 z-10 rounded-xl border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-900 shadow-2xl p-3 space-y-1"
                       >
                         {EXAMPLE_QUESTIONS.map((q, i) => (
                           <button
@@ -390,7 +390,7 @@ export default function ResearchCouncil() {
                               setShowExamples(false);
                               textareaRef.current?.focus();
                             }}
-                            className="w-full text-left text-xs text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg p-2.5 transition-colors"
+                            className="w-full text-left text-xs text-gray-500 dark:text-slate-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-slate-800 rounded-lg p-2.5 transition-colors"
                           >
                             {q}
                           </button>
@@ -448,8 +448,8 @@ export default function ResearchCouncil() {
                 </div>
               </div>
               <div>
-                <h3 className="text-lg font-semibold text-slate-300">The Council Awaits</h3>
-                <p className="text-sm text-slate-600 mt-1 max-w-md">
+                <h3 className="text-lg font-semibold text-gray-700 dark:text-slate-300">The Council Awaits</h3>
+                <p className="text-sm text-gray-400 dark:text-slate-500 mt-1 max-w-md">
                   Ask anything — your research question, a methodological dilemma, a theoretical challenge.
                   The Council will provide four perspectives simultaneously.
                 </p>
@@ -466,11 +466,11 @@ export default function ResearchCouncil() {
                   animate={{ opacity: 1, y: 0 }}
                   className="flex gap-3 items-start"
                 >
-                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-slate-600 to-slate-800 border border-slate-700 flex items-center justify-center shrink-0 mt-0.5">
-                    <BookOpen size={14} className="text-slate-300" />
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-slate-600 to-slate-800 border border-gray-300 dark:border-slate-700 flex items-center justify-center shrink-0 mt-0.5">
+                    <BookOpen size={14} className="text-gray-700 dark:text-slate-300" />
                   </div>
-                  <div className="flex-1 bg-slate-800/60 rounded-2xl rounded-tl-sm border border-slate-700/50 p-4">
-                    <p className="text-slate-200 text-sm">
+                  <div className="flex-1 bg-gray-100 dark:bg-slate-800 rounded-2xl rounded-tl-sm border border-gray-300/50 dark:border-slate-700/50 p-4">
+                    <p className="text-gray-800 dark:text-slate-100 text-sm">
                       {sessions.find((s) => s.id === activeSession)?.question}
                     </p>
                   </div>
@@ -511,7 +511,7 @@ export default function ResearchCouncil() {
                         <p className="text-xs font-semibold text-violet-400 uppercase tracking-wider mb-2">
                           Council Synthesis
                         </p>
-                        <p className="text-slate-200 text-sm leading-relaxed">
+                        <p className="text-gray-800 dark:text-slate-100 text-sm leading-relaxed">
                           <TypedText
                             text={councilResponse.synthesis}
                             delay={1200}

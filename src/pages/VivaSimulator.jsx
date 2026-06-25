@@ -233,14 +233,14 @@ export default function VivaSimulator() {
           <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-rose-500/20 to-pink-500/20 flex items-center justify-center mx-auto mb-6">
             <GraduationCap size={40} className="text-rose-400" />
           </div>
-          <h1 className="text-3xl font-bold text-white mb-3">Viva Voce Simulator</h1>
-          <p className="text-slate-400 mb-8 max-w-lg mx-auto">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-3">Viva Voce Simulator</h1>
+          <p className="text-gray-500 dark:text-slate-400 mb-8 max-w-lg mx-auto">
             Practice your PhD defense with AI-powered examination. Choose your examiner personality and receive detailed feedback on your responses.
           </p>
 
-          <Card className="bg-slate-900/50 border-slate-800 mb-6">
+          <Card className="bg-white/50 dark:bg-slate-900/50 border-gray-200 dark:border-slate-800 mb-6">
             <CardContent className="p-6">
-              <h3 className="text-sm font-medium text-slate-400 mb-4">Select Examiner Type</h3>
+              <h3 className="text-sm font-medium text-gray-500 dark:text-slate-400 mb-4">Select Examiner Type</h3>
               <div className="grid grid-cols-2 gap-3">
                 {EXAMINER_TYPES.map((examiner) => (
                   <button
@@ -250,24 +250,24 @@ export default function VivaSimulator() {
                       "p-4 rounded-xl border text-left transition-all",
                       examinerType === examiner.id
                         ? "bg-rose-500/20 border-rose-500/30"
-                        : "bg-slate-800/50 border-slate-700 hover:border-slate-600"
+                        : "bg-gray-50 dark:bg-slate-800 border-gray-300 dark:border-slate-700 hover:border-rose-500/30 dark:hover:border-rose-500/30"
                     )}
                   >
                     <div className="flex items-center justify-between mb-2">
-                      <span className="font-medium text-white">{examiner.name}</span>
+                      <span className="font-medium text-gray-900 dark:text-white">{examiner.name}</span>
                       <div className="flex gap-0.5">
                         {Array(4).fill(0).map((_, i) => (
                           <div
                             key={i}
                             className={cn(
                               "w-2 h-2 rounded-full",
-                              i < examiner.stress ? "bg-rose-400" : "bg-slate-700"
+                              i < examiner.stress ? "bg-rose-400" : "bg-gray-200 dark:bg-slate-600"
                             )}
                           />
                         ))}
                       </div>
                     </div>
-                    <p className="text-xs text-slate-400">{examiner.description}</p>
+                    <p className="text-xs text-gray-500 dark:text-slate-400">{examiner.description}</p>
                   </button>
                 ))}
               </div>
@@ -275,16 +275,16 @@ export default function VivaSimulator() {
           </Card>
 
           {vivaHistory.length > 0 && (
-            <Card className="bg-slate-900/50 border-slate-800 mb-6">
+            <Card className="bg-white/50 dark:bg-slate-900/50 border-gray-200 dark:border-slate-800 mb-6">
               <CardContent className="p-5">
                 <div className="flex items-center gap-2 mb-4">
                   <TrendingUp size={16} className="text-rose-400" />
-                  <h3 className="text-sm font-semibold text-white">Your Progress</h3>
+                  <h3 className="text-sm font-semibold text-gray-900 dark:text-white">Your Progress</h3>
                 </div>
                 <div className="grid grid-cols-3 gap-4 mb-3">
                   <div className="text-center">
-                    <p className="text-2xl font-bold text-white">{vivaHistory.length}</p>
-                    <p className="text-xs text-slate-500 mt-0.5">Sessions</p>
+                    <p className="text-2xl font-bold text-gray-900 dark:text-white">{vivaHistory.length}</p>
+                    <p className="text-xs text-gray-400 dark:text-slate-500 mt-0.5">Sessions</p>
                   </div>
                   <div className="text-center">
                     <p className={cn(
@@ -292,15 +292,15 @@ export default function VivaSimulator() {
                       lastSessionScore >= 70 ? "text-emerald-400" :
                       lastSessionScore >= 50 ? "text-amber-400" : "text-red-400"
                     )}>{lastSessionScore ?? '—'}%</p>
-                    <p className="text-xs text-slate-500 mt-0.5">Last session</p>
+                    <p className="text-xs text-gray-400 dark:text-slate-500 mt-0.5">Last session</p>
                   </div>
                   <div className="text-center">
-                    <p className="text-2xl font-bold text-white">
+                    <p className="text-2xl font-bold text-gray-900 dark:text-white">
                       {vivaHistory.length > 0
                         ? Math.round(vivaHistory.reduce((sum, s) => sum + (s.context?.sessionStats?.averageScore || 0), 0) / vivaHistory.length)
                         : '—'}%
                     </p>
-                    <p className="text-xs text-slate-500 mt-0.5">All-time avg</p>
+                    <p className="text-xs text-gray-400 dark:text-slate-500 mt-0.5">All-time avg</p>
                   </div>
                 </div>
                 {vivaHistory.length >= 2 && (() => {
@@ -310,7 +310,7 @@ export default function VivaSimulator() {
                     return (
                       <p className={cn(
                         "text-xs text-center font-medium",
-                        diff > 0 ? "text-emerald-400" : diff < 0 ? "text-rose-400" : "text-slate-400"
+                        diff > 0 ? "text-emerald-400" : diff < 0 ? "text-rose-400" : "text-gray-500"
                       )}>
                         {diff > 0 ? `↑ ${diff}% improvement` : diff < 0 ? `↓ ${Math.abs(diff)}% from previous` : 'Same as previous session'} — keep it up!
                       </p>
@@ -323,26 +323,26 @@ export default function VivaSimulator() {
           )}
 
           {/* Optional document upload */}
-          <Card className="bg-slate-900/50 border-slate-800 mb-6 w-full">
+          <Card className="bg-white/50 dark:bg-slate-900/50 border-gray-200 dark:border-slate-800 mb-6 w-full">
             <CardContent className="p-5">
-              <p className="text-sm font-semibold text-white mb-3">Upload your thesis / paper (optional)</p>
+              <p className="text-sm font-semibold text-gray-900 dark:text-white mb-3">Upload your thesis / paper (optional)</p>
               {uploadedDoc ? (
                 <div className="flex items-center justify-between p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
                   <div className="flex items-center gap-2">
                     <FileText size={16} className="text-emerald-400" />
-                    <span className="text-sm text-white truncate max-w-xs">{uploadedDoc.name}</span>
+                    <span className="text-sm text-gray-900 dark:text-white truncate max-w-xs">{uploadedDoc.name}</span>
                   </div>
-                  <button onClick={handleDocRemove} className="text-slate-400 hover:text-white ml-2">
+                  <button onClick={handleDocRemove} className="text-gray-500 hover:text-gray-900 dark:hover:text-white ml-2">
                     <X size={16} />
                   </button>
                 </div>
               ) : (
                 <label className="cursor-pointer block">
                   <input type="file" accept=".pdf,.txt,.doc,.docx" onChange={handleDocUpload} className="hidden" disabled={uploadingDoc} />
-                  <div className="p-3 rounded-lg border-2 border-dashed border-slate-700 hover:border-rose-500/50 transition-colors text-center">
+                  <div className="p-3 rounded-lg border-2 border-dashed border-gray-300 dark:border-slate-600 hover:border-rose-500/50 transition-colors text-center">
                     {uploadingDoc
-                      ? <span className="text-sm text-slate-400 flex items-center justify-center gap-2"><Loader2 size={14} className="animate-spin" /> Processing...</span>
-                      : <span className="text-sm text-slate-400 flex items-center justify-center gap-2"><Upload size={14} /> Upload PDF or TXT for document-specific questions</span>
+                      ? <span className="text-sm text-gray-500 dark:text-slate-400 flex items-center justify-center gap-2"><Loader2 size={14} className="animate-spin" /> Processing...</span>
+                      : <span className="text-sm text-gray-500 dark:text-slate-400 flex items-center justify-center gap-2"><Upload size={14} /> Upload PDF or TXT for document-specific questions</span>
                     }
                   </div>
                 </label>
@@ -368,14 +368,14 @@ export default function VivaSimulator() {
       {/* Main Examination Area */}
       <div className="flex-1 flex flex-col">
         {/* Header */}
-        <div className="p-4 border-b border-slate-800 bg-slate-900/50 flex items-center justify-between">
+        <div className="p-4 border-b border-gray-200 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-rose-500 to-pink-600 flex items-center justify-center">
               <GraduationCap size={20} className="text-white" />
             </div>
             <div>
-              <h2 className="font-semibold text-white">{currentExaminer?.name}</h2>
-              <p className="text-xs text-slate-400">Question {sessionStats.questionsAnswered + 1}</p>
+              <h2 className="font-semibold text-gray-900 dark:text-white">{currentExaminer?.name}</h2>
+              <p className="text-xs text-gray-500 dark:text-slate-400">Question {sessionStats.questionsAnswered + 1}</p>
             </div>
           </div>
           <div className="flex items-center gap-3">
@@ -385,7 +385,7 @@ export default function VivaSimulator() {
             <Button
               size="sm"
               onClick={() => setSessionStarted(false)}
-              className="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-600"
+              className="bg-gray-100 dark:bg-slate-800 hover:bg-gray-200 dark:hover:bg-slate-700 text-gray-800 dark:text-slate-200 border border-gray-300 dark:border-slate-600"
             >
               <RotateCcw size={14} className="mr-2" />
               End Session
@@ -398,10 +398,10 @@ export default function VivaSimulator() {
           <div className="max-w-3xl mx-auto space-y-6">
             {/* Current Question */}
             {currentQuestion && !feedback && (
-              <Card className="bg-slate-900/50 border-slate-800">
+              <Card className="bg-white/50 dark:bg-slate-900/50 border-gray-200 dark:border-slate-800">
                 <CardHeader>
                   <div className="flex items-center justify-between">
-                    <Badge className="bg-slate-700 text-slate-200 border border-slate-600">
+                    <Badge className="bg-gray-200 dark:bg-slate-700 text-gray-800 dark:text-slate-200 border border-gray-300 dark:border-slate-600">
                       {currentQuestion.question_type}
                     </Badge>
                     <div className="flex items-center gap-1">
@@ -410,7 +410,7 @@ export default function VivaSimulator() {
                           key={i}
                           className={cn(
                             "w-2 h-2 rounded-full",
-                            i < (currentQuestion.difficulty || 3) ? "bg-amber-400" : "bg-slate-700"
+                            i < (currentQuestion.difficulty || 3) ? "bg-amber-400" : "bg-gray-200"
                           )}
                         />
                       ))}
@@ -418,19 +418,19 @@ export default function VivaSimulator() {
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-lg text-white leading-relaxed mb-6">
+                  <p className="text-lg text-gray-900 dark:text-white leading-relaxed mb-6">
                     {currentQuestion.question}
                   </p>
-                  
+
                   <Textarea
                     value={userAnswer}
                     onChange={(e) => setUserAnswer(e.target.value)}
                     placeholder="Type your answer here... Be thorough and demonstrate your understanding."
-                    className="min-h-[200px] bg-slate-800 border-slate-700 mb-4"
+                    className="min-h-[200px] bg-gray-100 dark:bg-slate-800 border-gray-300 dark:border-slate-700 dark:text-slate-100 dark:placeholder-slate-500 mb-4"
                   />
 
                   <div className="flex items-center justify-between">
-                    <p className="text-xs text-slate-500">
+                    <p className="text-xs text-gray-400 dark:text-slate-500">
                       {userAnswer.split(/\s+/).filter(Boolean).length} words
                     </p>
                     <Button
@@ -454,13 +454,13 @@ export default function VivaSimulator() {
             {feedback && (
               <div className="space-y-4">
                 {/* Score Overview */}
-                <Card className="bg-slate-900/50 border-slate-800">
+                <Card className="bg-white/50 dark:bg-slate-900/50 border-gray-200 dark:border-slate-800">
                   <CardContent className="p-6">
                     <div className="flex items-center justify-between mb-6">
-                      <h3 className="text-lg font-semibold text-white">Evaluation</h3>
+                      <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Evaluation</h3>
                       <div className="text-right">
-                        <span className="text-4xl font-bold text-white">{feedback.overall_score}</span>
-                        <span className="text-slate-400 text-lg">/100</span>
+                        <span className="text-4xl font-bold text-gray-900 dark:text-white">{feedback.overall_score}</span>
+                        <span className="text-gray-500 dark:text-slate-400 text-lg">/100</span>
                       </div>
                     </div>
 
@@ -470,7 +470,7 @@ export default function VivaSimulator() {
                       <ScoreBar label="Communication" score={feedback.communication_score} />
                     </div>
 
-                    <p className="text-slate-300 text-sm bg-slate-800/50 p-4 rounded-lg">
+                    <p className="text-gray-700 dark:text-slate-300 text-sm bg-gray-50 dark:bg-slate-800/60 p-4 rounded-lg">
                       {feedback.feedback_summary}
                     </p>
                   </CardContent>
@@ -488,7 +488,7 @@ export default function VivaSimulator() {
                     <CardContent>
                       <ul className="space-y-2">
                         {feedback.strengths?.map((s, i) => (
-                          <li key={i} className="text-sm text-slate-300 flex items-start gap-2">
+                          <li key={i} className="text-sm text-gray-700 dark:text-slate-300 flex items-start gap-2">
                             <ChevronRight size={14} className="text-emerald-400 mt-0.5 flex-shrink-0" />
                             {s}
                           </li>
@@ -507,7 +507,7 @@ export default function VivaSimulator() {
                     <CardContent>
                       <ul className="space-y-2">
                         {feedback.improvements?.map((s, i) => (
-                          <li key={i} className="text-sm text-slate-300 flex items-start gap-2">
+                          <li key={i} className="text-sm text-gray-700 dark:text-slate-300 flex items-start gap-2">
                             <ChevronRight size={14} className="text-amber-400 mt-0.5 flex-shrink-0" />
                             {s}
                           </li>
@@ -529,7 +529,7 @@ export default function VivaSimulator() {
                     <CardContent>
                       <ul className="space-y-2">
                         {feedback.model_answer_points.map((point, i) => (
-                          <li key={i} className="text-sm text-slate-300 flex items-start gap-2">
+                          <li key={i} className="text-sm text-gray-700 dark:text-slate-300 flex items-start gap-2">
                             <span className="text-blue-400 font-medium">{i + 1}.</span>
                             {point}
                           </li>
@@ -558,7 +558,7 @@ export default function VivaSimulator() {
             {isLoading && !currentQuestion && (
               <div className="text-center py-12">
                 <Loader2 size={32} className="animate-spin mx-auto text-rose-400 mb-4" />
-                <p className="text-slate-400">Preparing your question...</p>
+                <p className="text-gray-500 dark:text-slate-400">Preparing your question...</p>
               </div>
             )}
           </div>
@@ -566,24 +566,24 @@ export default function VivaSimulator() {
       </div>
 
       {/* Session Stats Sidebar */}
-      <div className="w-80 border-l border-slate-800 bg-slate-900/30 p-4">
-        <h3 className="font-semibold text-white mb-4">Session Progress</h3>
+      <div className="w-80 border-l border-gray-200 dark:border-slate-800 bg-white/30 dark:bg-slate-900/30 p-4">
+        <h3 className="font-semibold text-gray-900 dark:text-white mb-4">Session Progress</h3>
         
         <div className="space-y-4">
-          <Card className="bg-slate-800/50 border-slate-700">
+          <Card className="bg-gray-50 dark:bg-slate-800 border-gray-300 dark:border-slate-700">
             <CardContent className="p-4">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-sm text-slate-400">Questions Answered</span>
-                <span className="text-2xl font-bold text-white">{sessionStats.questionsAnswered}</span>
+                <span className="text-sm text-gray-500 dark:text-slate-400">Questions Answered</span>
+                <span className="text-2xl font-bold text-gray-900 dark:text-white">{sessionStats.questionsAnswered}</span>
               </div>
               <Progress value={(sessionStats.questionsAnswered / 10) * 100} className="h-1" />
             </CardContent>
           </Card>
 
-          <Card className="bg-slate-800/50 border-slate-700">
+          <Card className="bg-gray-50 dark:bg-slate-800 border-gray-300 dark:border-slate-700">
             <CardContent className="p-4">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-sm text-slate-400">Average Score</span>
+                <span className="text-sm text-gray-500 dark:text-slate-400">Average Score</span>
                 <span className={cn(
                   "text-2xl font-bold",
                   sessionStats.averageScore >= 70 ? "text-emerald-400" :
@@ -598,7 +598,7 @@ export default function VivaSimulator() {
                 return (
                   <p className={cn(
                     "text-xs mt-2",
-                    diff > 0 ? "text-emerald-400" : diff < 0 ? "text-rose-400" : "text-slate-500"
+                    diff > 0 ? "text-emerald-400" : diff < 0 ? "text-rose-400" : "text-gray-400"
                   )}>
                     {diff > 0 ? `↑ +${diff}%` : diff < 0 ? `↓ ${diff}%` : '='} vs last session ({lastSessionScore}%)
                   </p>
@@ -610,11 +610,11 @@ export default function VivaSimulator() {
           {/* Question History */}
           {questionHistory.length > 0 && (
             <div className="mt-6">
-              <h4 className="text-sm font-medium text-slate-400 mb-3">History</h4>
+              <h4 className="text-sm font-medium text-gray-500 dark:text-slate-400 mb-3">History</h4>
               <div className="space-y-2">
                 {questionHistory.slice(-5).map((q, i) => (
-                  <div key={i} className="p-2 rounded bg-slate-800/30 border border-slate-700/50">
-                    <p className="text-xs text-slate-400 truncate">{q.question}</p>
+                  <div key={i} className="p-2 rounded bg-white/70 dark:bg-slate-800 border border-gray-300/50 dark:border-slate-700/50">
+                    <p className="text-xs text-gray-500 dark:text-slate-400 truncate">{q.question}</p>
                     <div className="flex items-center justify-between mt-1">
                       <span className={cn(
                         "text-xs font-medium",
@@ -639,8 +639,8 @@ function ScoreBar({ label, score }) {
   return (
     <div>
       <div className="flex items-center justify-between mb-1">
-        <span className="text-xs text-slate-400">{label}</span>
-        <span className="text-xs font-medium text-white">{score}%</span>
+        <span className="text-xs text-gray-500 dark:text-slate-400">{label}</span>
+        <span className="text-xs font-medium text-gray-900 dark:text-white">{score}%</span>
       </div>
       <Progress value={score} className="h-1.5" />
     </div>

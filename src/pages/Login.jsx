@@ -21,7 +21,7 @@ function GoogleIcon({ size = 18 }) {
 function Input({ className = '', ...props }) {
   return (
     <input
-      className={`w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-violet-500/50 transition-colors ${className}`}
+      className={`w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-400/20 transition-colors ${className}`}
       {...props}
     />
   );
@@ -101,7 +101,7 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-violet-50 via-white to-purple-50 flex items-center justify-center p-4">
 
       {/* Ambient glow */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -117,31 +117,31 @@ export default function Login() {
       >
         <Link
           to="/"
-          className="inline-flex items-center gap-2 text-slate-400 hover:text-white text-sm mb-8 transition-colors group"
+          className="inline-flex items-center gap-2 text-gray-500 hover:text-gray-900 text-sm mb-8 transition-colors group"
         >
           <ArrowLeft size={15} className="group-hover:-translate-x-0.5 transition-transform" />
           Back to home
         </Link>
 
-        <div className="bg-slate-900/80 backdrop-blur-xl border border-slate-800 rounded-2xl p-8 shadow-2xl shadow-black/40">
+        <div className="bg-white backdrop-blur-xl border border-gray-200 rounded-2xl p-8 shadow-xl shadow-violet-200/40">
 
           {/* Logo */}
           <div className="text-center mb-8">
             <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-violet-500 to-purple-600 mb-4 shadow-lg shadow-violet-500/25">
               <Sparkles size={26} className="text-white" />
             </div>
-            <h1 className="text-2xl font-bold text-white">CogniFlow</h1>
-            <p className="text-slate-400 text-sm mt-1">Your AI Research Companion</p>
+            <h1 className="text-2xl font-bold text-gray-900">CogniFlow</h1>
+            <p className="text-gray-500 text-sm mt-1">Your AI Research Companion</p>
           </div>
 
           {/* Google sign-in */}
           <button
             onClick={handleGoogle}
             disabled={googleLoading || isLoading}
-            className="w-full flex items-center justify-center gap-3 py-2.5 px-4 rounded-xl border border-slate-700 bg-white hover:bg-slate-100 text-slate-900 font-semibold text-sm transition-all mb-5 disabled:opacity-50"
+            className="w-full flex items-center justify-center gap-3 py-2.5 px-4 rounded-xl border border-gray-300 bg-white hover:bg-slate-100 text-slate-900 font-semibold text-sm transition-all mb-5 disabled:opacity-50"
           >
             {googleLoading
-              ? <Loader2 size={16} className="animate-spin text-slate-600" />
+              ? <Loader2 size={16} className="animate-spin text-gray-400" />
               : <GoogleIcon size={18} />
             }
             Continue with Google
@@ -149,21 +149,21 @@ export default function Login() {
 
           {/* Divider */}
           <div className="flex items-center gap-3 mb-5">
-            <div className="flex-1 h-px bg-slate-800" />
-            <span className="text-xs text-slate-500">or use email</span>
-            <div className="flex-1 h-px bg-slate-800" />
+            <div className="flex-1 h-px bg-gray-100" />
+            <span className="text-xs text-gray-400">or use email</span>
+            <div className="flex-1 h-px bg-gray-100" />
           </div>
 
           {/* Tabs */}
-          <div className="flex gap-1 p-1 bg-slate-800/50 rounded-xl mb-6">
+          <div className="flex gap-1 p-1 bg-gray-50 rounded-xl mb-6">
             {[{ id: 'login', label: 'Sign In' }, { id: 'register', label: 'Create Account' }].map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => switchTab(tab.id)}
                 className={`flex-1 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
                   activeTab === tab.id
-                    ? 'bg-slate-700 text-white shadow-sm'
-                    : 'text-slate-400 hover:text-slate-200'
+                    ? 'bg-white text-gray-900 shadow-sm'
+                    : 'text-gray-500 hover:text-gray-800'
                 }`}
               >
                 {tab.label}
@@ -181,9 +181,9 @@ export default function Login() {
           {activeTab === 'login' && (
             <form onSubmit={handleLogin} className="space-y-4">
               <div>
-                <label className="text-slate-300 text-sm mb-1.5 block">Email</label>
+                <label className="text-gray-700 text-sm mb-1.5 block">Email</label>
                 <div className="relative">
-                  <Mail size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                  <Mail size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
                   <Input
                     type="email"
                     value={email}
@@ -197,9 +197,9 @@ export default function Login() {
               </div>
 
               <div>
-                <label className="text-slate-300 text-sm mb-1.5 block">Password</label>
+                <label className="text-gray-700 text-sm mb-1.5 block">Password</label>
                 <div className="relative">
-                  <Lock size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                  <Lock size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
                   <Input
                     type={showPassword ? 'text' : 'password'}
                     value={password}
@@ -211,7 +211,7 @@ export default function Login() {
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white transition-colors"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-900 transition-colors"
                     tabIndex={-1}
                   >
                     {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
@@ -234,9 +234,9 @@ export default function Login() {
           {activeTab === 'register' && (
             <form onSubmit={handleRegister} className="space-y-4">
               <div>
-                <label className="text-slate-300 text-sm mb-1.5 block">Full Name</label>
+                <label className="text-gray-700 text-sm mb-1.5 block">Full Name</label>
                 <div className="relative">
-                  <User size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                  <User size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
                   <Input
                     type="text"
                     value={fullName}
@@ -250,9 +250,9 @@ export default function Login() {
               </div>
 
               <div>
-                <label className="text-slate-300 text-sm mb-1.5 block">Email</label>
+                <label className="text-gray-700 text-sm mb-1.5 block">Email</label>
                 <div className="relative">
-                  <Mail size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                  <Mail size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
                   <Input
                     type="email"
                     value={email}
@@ -265,9 +265,9 @@ export default function Login() {
               </div>
 
               <div>
-                <label className="text-slate-300 text-sm mb-1.5 block">Password</label>
+                <label className="text-gray-700 text-sm mb-1.5 block">Password</label>
                 <div className="relative">
-                  <Lock size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                  <Lock size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
                   <Input
                     type={showPassword ? 'text' : 'password'}
                     value={password}
@@ -279,7 +279,7 @@ export default function Login() {
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white transition-colors"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-900 transition-colors"
                     tabIndex={-1}
                   >
                     {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
@@ -298,7 +298,7 @@ export default function Login() {
             </form>
           )}
 
-          <p className="text-center text-xs text-slate-600 mt-6">
+          <p className="text-center text-xs text-gray-400 mt-6">
             Powered by Firebase Authentication
           </p>
         </div>

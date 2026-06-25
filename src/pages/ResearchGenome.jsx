@@ -139,12 +139,12 @@ function TraitBar({ label, value, color, desc }) {
     <div className="space-y-1.5">
       <div className="flex items-center justify-between">
         <div>
-          <span className="text-sm font-medium text-white">{label}</span>
-          <span className="text-xs text-slate-500 ml-2">{desc}</span>
+          <span className="text-sm font-medium text-gray-900 dark:text-white">{label}</span>
+          <span className="text-xs text-gray-400 dark:text-slate-500 ml-2">{desc}</span>
         </div>
         <span className="text-sm font-bold" style={{ color }}>{value}</span>
       </div>
-      <div className="h-1.5 bg-slate-800 rounded-full overflow-hidden">
+      <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
         <motion.div
           initial={{ width: 0 }}
           animate={{ width: `${value}%` }}
@@ -171,7 +171,7 @@ export default function ResearchGenome() {
   const blindSpots = genome?.blind_spots?.filter(Boolean) || [];
 
   return (
-    <div className="min-h-screen bg-slate-950 p-6 md:p-8">
+    <div className="min-h-screen bg-violet-50 dark:bg-slate-950 p-6 md:p-8">
       <div className="max-w-4xl mx-auto space-y-8">
 
         {/* Header */}
@@ -180,8 +180,8 @@ export default function ResearchGenome() {
             <Dna size={20} className="text-white" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-white">Research Genome</h1>
-            <p className="text-sm text-slate-500">Your unique research DNA — derived from everything you've built here</p>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Research Genome</h1>
+            <p className="text-sm text-gray-400 dark:text-slate-500">Your unique research DNA — derived from everything you've built here</p>
           </div>
         </div>
 
@@ -193,7 +193,7 @@ export default function ResearchGenome() {
                 transition={{ repeat: Infinity, duration: 2, ease: 'linear' }}
                 className="w-10 h-10 rounded-full border-2 border-violet-500 border-t-transparent mx-auto"
               />
-              <p className="text-sm text-slate-500">Sequencing your research DNA…</p>
+              <p className="text-sm text-gray-400 dark:text-slate-500">Sequencing your research DNA…</p>
             </div>
           </div>
         )}
@@ -214,7 +214,7 @@ export default function ResearchGenome() {
               <motion.div
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="rounded-2xl p-5 border border-white/5 overflow-hidden relative"
+                className="rounded-2xl p-5 border border-gray-200 dark:border-slate-800 overflow-hidden relative"
                 style={{ background: `linear-gradient(135deg, ${archetypeColor.from}18, ${archetypeColor.to}08)` }}
               >
                 <div
@@ -224,7 +224,7 @@ export default function ResearchGenome() {
                 <div className="relative space-y-3">
                   <div className="flex items-center gap-2">
                     <Star size={14} style={{ color: archetypeColor.from }} />
-                    <span className="text-xs font-semibold text-slate-500 uppercase tracking-widest">Your Archetype</span>
+                    <span className="text-xs font-semibold text-gray-400 dark:text-slate-500 uppercase tracking-widest">Your Archetype</span>
                   </div>
                   <h2
                     className="text-3xl font-black tracking-tight"
@@ -232,13 +232,13 @@ export default function ResearchGenome() {
                   >
                     {genome.archetype}
                   </h2>
-                  <p className="text-sm text-slate-400 leading-relaxed">{genome.archetype_description}</p>
+                  <p className="text-sm text-gray-500 dark:text-slate-400 leading-relaxed">{genome.archetype_description}</p>
                   <div className="pt-1">
-                    <span className="text-xs text-slate-600">Dominant trait: </span>
+                    <span className="text-xs text-gray-400 dark:text-slate-500">Dominant trait: </span>
                     <span className="text-xs font-semibold" style={{ color: TRAIT_META[genome.dominant_trait]?.color }}>
                       {TRAIT_META[genome.dominant_trait]?.label}
                     </span>
-                    <p className="text-xs text-slate-500 mt-0.5">{genome.dominant_description}</p>
+                    <p className="text-xs text-gray-400 dark:text-slate-500 mt-0.5">{genome.dominant_description}</p>
                   </div>
                 </div>
               </motion.div>
@@ -248,9 +248,9 @@ export default function ResearchGenome() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.2 }}
-                className="rounded-2xl bg-slate-900/60 border border-white/5 p-5 flex flex-col items-center"
+                className="rounded-2xl bg-white/80 dark:bg-slate-900/80 border border-gray-200 dark:border-slate-800 p-5 flex flex-col items-center"
               >
-                <p className="text-xs font-semibold text-slate-500 uppercase tracking-widest mb-4">Research DNA Radar</p>
+                <p className="text-xs font-semibold text-gray-400 dark:text-slate-500 uppercase tracking-widest mb-4">Research DNA Radar</p>
                 <RadarChart traits={genome.traits} />
               </motion.div>
             </div>
@@ -262,11 +262,11 @@ export default function ResearchGenome() {
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 }}
-                className="rounded-2xl bg-slate-900/60 border border-white/5 p-5 space-y-4"
+                className="rounded-2xl bg-white/80 dark:bg-slate-900/80 border border-gray-200 dark:border-slate-800 p-5 space-y-4"
               >
                 <div className="flex items-center gap-2">
                   <BarChart2 size={14} className="text-violet-400" />
-                  <span className="text-sm font-semibold text-white">Trait Breakdown</span>
+                  <span className="text-sm font-semibold text-gray-900 dark:text-white">Trait Breakdown</span>
                 </div>
                 {Object.entries(TRAIT_META).map(([key, meta]) => (
                   <TraitBar
@@ -284,17 +284,17 @@ export default function ResearchGenome() {
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
-                className="rounded-2xl bg-slate-900/60 border border-white/5 p-5 space-y-3"
+                className="rounded-2xl bg-white/80 border border-gray-200 p-5 space-y-3"
               >
                 <div className="flex items-center gap-2">
                   <TrendingUp size={14} className="text-emerald-400" />
-                  <span className="text-sm font-semibold text-white">Observed Strengths</span>
+                  <span className="text-sm font-semibold text-gray-900">Observed Strengths</span>
                 </div>
                 <ul className="space-y-2">
                   {(genome.strengths || []).map((s, i) => (
                     <li key={i} className="flex items-start gap-2.5">
                       <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 mt-1.5 shrink-0" />
-                      <span className="text-sm text-slate-400">{s}</span>
+                      <span className="text-sm text-gray-500">{s}</span>
                     </li>
                   ))}
                 </ul>
@@ -316,7 +316,7 @@ export default function ResearchGenome() {
                     {blindSpots.map((b, i) => (
                       <li key={i} className="flex items-start gap-2.5">
                         <span className="w-1.5 h-1.5 rounded-full bg-amber-400 mt-1.5 shrink-0" />
-                        <span className="text-sm text-slate-400">{b}</span>
+                        <span className="text-sm text-gray-500">{b}</span>
                       </li>
                     ))}
                   </ul>
@@ -328,10 +328,10 @@ export default function ResearchGenome() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.4 }}
-                className="rounded-xl bg-slate-800/40 border border-slate-700/30 px-4 py-3 flex items-center justify-between"
+                className="rounded-xl bg-gray-100/70 border border-gray-200 px-4 py-3 flex items-center justify-between"
               >
-                <span className="text-xs text-slate-500">Total research events analysed</span>
-                <span className="text-lg font-black text-white">{genome.total_research_events}</span>
+                <span className="text-xs text-gray-400">Total research events analysed</span>
+                <span className="text-lg font-black text-gray-900">{genome.total_research_events}</span>
               </motion.div>
             </div>
           </div>
@@ -345,8 +345,8 @@ export default function ResearchGenome() {
             className="rounded-2xl bg-violet-500/5 border border-violet-500/15 p-6 text-center space-y-3"
           >
             <Dna size={32} className="text-violet-400 mx-auto" />
-            <h3 className="text-sm font-semibold text-white">Your genome is forming</h3>
-            <p className="text-sm text-slate-500 max-w-sm mx-auto">
+            <h3 className="text-sm font-semibold text-gray-900">Your genome is forming</h3>
+            <p className="text-sm text-gray-400 max-w-sm mx-auto">
               Upload documents, identify research gaps, and start Research Council sessions —
               each action adds DNA to your profile.
             </p>

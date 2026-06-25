@@ -31,7 +31,7 @@ function CopyButton({ text, small }) {
     setTimeout(() => setCopied(false), 2000);
   };
   return (
-    <Button variant="ghost" size={small ? 'sm' : 'default'} onClick={copy} className="gap-1 text-slate-400 hover:text-slate-100">
+    <Button variant="ghost" size={small ? 'sm' : 'default'} onClick={copy} className="gap-1 text-gray-500 hover:text-gray-900">
       {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
       {copied ? 'Copied' : 'Copy'}
     </Button>
@@ -65,17 +65,17 @@ function CitationModal({ paper, onClose }) {
 
   return (
     <Dialog open onOpenChange={onClose}>
-      <DialogContent className="bg-slate-900 border-slate-700 max-w-2xl">
+      <DialogContent className="bg-white border-gray-300 max-w-2xl">
         <DialogHeader>
-          <DialogTitle className="text-slate-100 flex items-center gap-2">
+          <DialogTitle className="text-gray-900 flex items-center gap-2">
             <Quote className="w-4 h-4 text-violet-400" /> Cite Paper
           </DialogTitle>
         </DialogHeader>
-        <p className="text-sm text-slate-400 line-clamp-2">{paper.title}</p>
+        <p className="text-sm text-gray-500 line-clamp-2">{paper.title}</p>
         <div className="flex gap-2 mt-2">
           {['apa', 'mla', 'bibtex'].map(s => (
             <Button key={s} size="sm" variant={style === s ? 'default' : 'outline'}
-              className={style === s ? 'bg-violet-600 hover:bg-violet-700' : 'border-slate-600 text-slate-300'}
+              className={style === s ? 'bg-violet-600 hover:bg-violet-700' : 'border-gray-300 text-gray-700'}
               onClick={() => handleStyle(s)}>
               {s.toUpperCase()}
             </Button>
@@ -87,7 +87,7 @@ function CitationModal({ paper, onClose }) {
               <Loader2 className="w-5 h-5 animate-spin text-violet-400" />
             </div>
           ) : (
-            <pre className="bg-slate-800 rounded-lg p-4 text-sm text-slate-200 whitespace-pre-wrap font-mono leading-relaxed">
+            <pre className="bg-gray-100 rounded-lg p-4 text-sm text-gray-800 whitespace-pre-wrap font-mono leading-relaxed">
               {citation}
             </pre>
           )}
@@ -142,31 +142,31 @@ function AddToProjectModal({ paper, onClose }) {
 
   return (
     <Dialog open onOpenChange={onClose}>
-      <DialogContent className="bg-slate-900 border-slate-700 max-w-md">
+      <DialogContent className="bg-white border-gray-300 max-w-md">
         <DialogHeader>
-          <DialogTitle className="text-slate-100 flex items-center gap-2">
+          <DialogTitle className="text-gray-900 flex items-center gap-2">
             <FolderPlus className="w-4 h-4 text-violet-400" /> Add to Project
           </DialogTitle>
         </DialogHeader>
-        <p className="text-xs text-slate-400 line-clamp-2 mb-3">{paper.title}</p>
+        <p className="text-xs text-gray-500 line-clamp-2 mb-3">{paper.title}</p>
         {loading ? (
           <div className="flex items-center justify-center py-8">
             <Loader2 className="w-5 h-5 animate-spin text-violet-400" />
           </div>
         ) : projects.length === 0 ? (
-          <p className="text-sm text-slate-500 text-center py-6">No projects yet. Create one first.</p>
+          <p className="text-sm text-gray-400 text-center py-6">No projects yet. Create one first.</p>
         ) : (
           <div className="space-y-2 max-h-72 overflow-y-auto">
             {projects.map(p => (
-              <div key={p.id} className="flex items-center justify-between gap-3 p-3 rounded-lg bg-slate-800 border border-slate-700">
-                <span className="text-sm text-slate-200 truncate">{p.title}</span>
+              <div key={p.id} className="flex items-center justify-between gap-3 p-3 rounded-lg bg-gray-100 border border-gray-300">
+                <span className="text-sm text-gray-800 truncate">{p.title}</span>
                 {saved[p.id] ? (
                   <span className="flex items-center gap-1 text-xs text-emerald-400 shrink-0">
                     <CheckCircle2 className="w-3.5 h-3.5" /> Added
                   </span>
                 ) : (
                   <Button size="sm" variant="outline"
-                    className="border-violet-600 text-violet-400 hover:bg-violet-600 hover:text-white shrink-0 h-7 text-xs"
+                    className="border-violet-600 text-violet-400 hover:bg-violet-600 hover:text-gray-900 shrink-0 h-7 text-xs"
                     disabled={saving === p.id}
                     onClick={() => addToProject(p)}>
                     {saving === p.id ? <Loader2 className="w-3 h-3 animate-spin" /> : 'Add'}
@@ -185,18 +185,18 @@ function PaperCard({ paper, onCite, onSave, saved, onAddToProject }) {
   const [expanded, setExpanded] = useState(false);
 
   return (
-    <Card className="bg-slate-800/60 border-slate-700 hover:border-violet-500/40 transition-colors">
+    <Card className="bg-gray-100 border-gray-300 hover:border-violet-500/40 transition-colors">
       <CardContent className="p-5">
         <div className="flex items-start justify-between gap-3">
           <div className="flex-1 min-w-0">
-            <h3 className="text-slate-100 font-medium text-sm leading-snug line-clamp-2 mb-2">
+            <h3 className="text-gray-900 font-medium text-sm leading-snug line-clamp-2 mb-2">
               {paper.title}
             </h3>
-            <div className="flex flex-wrap items-center gap-2 text-xs text-slate-400 mb-2">
+            <div className="flex flex-wrap items-center gap-2 text-xs text-gray-500 mb-2">
               {paper.authors?.length > 0 && (
                 <span>{paper.authors.slice(0, 3).join(', ')}{paper.authors.length > 3 ? ' et al.' : ''}</span>
               )}
-              {paper.year && <Badge variant="outline" className="border-slate-600 text-slate-400 text-xs py-0">{paper.year}</Badge>}
+              {paper.year && <Badge variant="outline" className="border-gray-300 text-gray-500 text-xs py-0">{paper.year}</Badge>}
               {paper.journal && <span className="text-violet-400 truncate max-w-[200px]">{paper.journal}</span>}
               {paper.cited_by_count > 0 && (
                 <span className="flex items-center gap-1">
@@ -207,7 +207,7 @@ function PaperCard({ paper, onCite, onSave, saved, onAddToProject }) {
             </div>
 
             {paper.abstract && (
-              <p className={`text-xs text-slate-400 leading-relaxed ${expanded ? '' : 'line-clamp-2'}`}>
+              <p className={`text-xs text-gray-500 leading-relaxed ${expanded ? '' : 'line-clamp-2'}`}>
                 {paper.abstract}
               </p>
             )}
@@ -220,33 +220,33 @@ function PaperCard({ paper, onCite, onSave, saved, onAddToProject }) {
             {paper.concepts?.length > 0 && (
               <div className="flex flex-wrap gap-1 mt-2">
                 {paper.concepts.slice(0, 4).map(c => (
-                  <Badge key={c} variant="outline" className="text-xs py-0 border-slate-700 text-slate-500">{c}</Badge>
+                  <Badge key={c} variant="outline" className="text-xs py-0 border-gray-300 text-gray-400">{c}</Badge>
                 ))}
               </div>
             )}
           </div>
         </div>
 
-        <div className="flex items-center gap-2 mt-3 pt-3 border-t border-slate-700">
-          <Button size="sm" variant="ghost" className="text-slate-400 hover:text-violet-300 gap-1 h-7 px-2"
+        <div className="flex items-center gap-2 mt-3 pt-3 border-t border-gray-300">
+          <Button size="sm" variant="ghost" className="text-gray-500 hover:text-violet-300 gap-1 h-7 px-2"
             onClick={() => onCite(paper)}>
             <Quote className="w-3.5 h-3.5" /> Cite
           </Button>
           <Button size="sm" variant="ghost"
-            className={`gap-1 h-7 px-2 ${saved ? 'text-amber-400' : 'text-slate-400 hover:text-amber-300'}`}
+            className={`gap-1 h-7 px-2 ${saved ? 'text-amber-400' : 'text-gray-500 hover:text-amber-300'}`}
             onClick={() => onSave(paper)}>
             <Star className="w-3.5 h-3.5" fill={saved ? 'currentColor' : 'none'} />
             {saved ? 'Saved' : 'Save'}
           </Button>
           {paper.doi && (
-            <Button size="sm" variant="ghost" className="text-slate-400 hover:text-blue-300 gap-1 h-7 px-2" asChild>
+            <Button size="sm" variant="ghost" className="text-gray-500 hover:text-blue-300 gap-1 h-7 px-2" asChild>
               <a href={`https://doi.org/${paper.doi}`} target="_blank" rel="noreferrer">
                 <ExternalLink className="w-3.5 h-3.5" /> DOI
               </a>
             </Button>
           )}
           {paper.pdf_url && (
-            <Button size="sm" variant="ghost" className="text-slate-400 hover:text-emerald-300 gap-1 h-7 px-2" asChild>
+            <Button size="sm" variant="ghost" className="text-gray-500 hover:text-emerald-300 gap-1 h-7 px-2" asChild>
               <a href={paper.pdf_url} target="_blank" rel="noreferrer">
                 <Download className="w-3.5 h-3.5" /> PDF
               </a>
@@ -255,7 +255,7 @@ function PaperCard({ paper, onCite, onSave, saved, onAddToProject }) {
           {paper.doi && (
             <CopyButton text={`https://doi.org/${paper.doi}`} small />
           )}
-          <Button size="sm" variant="ghost" className="text-slate-400 hover:text-violet-300 gap-1 h-7 px-2 ml-auto"
+          <Button size="sm" variant="ghost" className="text-gray-500 hover:text-violet-300 gap-1 h-7 px-2 ml-auto"
             onClick={() => onAddToProject(paper)}>
             <FolderPlus className="w-3.5 h-3.5" /> Add to Project
           </Button>
@@ -337,7 +337,7 @@ export default function PaperSearch() {
   const years = Array.from({ length: 35 }, (_, i) => currentYear - i);
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 p-6">
+    <div className="min-h-screen bg-violet-50 text-gray-900 p-6">
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="mb-8">
@@ -346,14 +346,14 @@ export default function PaperSearch() {
               <Search className="w-5 h-5 text-white" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-slate-100">Paper Search</h1>
-              <p className="text-sm text-slate-400">250M+ papers via OpenAlex</p>
+              <h1 className="text-2xl font-bold text-gray-900">Paper Search</h1>
+              <p className="text-sm text-gray-500">250M+ papers via OpenAlex</p>
             </div>
           </div>
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="bg-slate-800 border-slate-700 mb-6">
+          <TabsList className="bg-gray-100 border-gray-300 mb-6">
             <TabsTrigger value="search" className="data-[state=active]:bg-violet-600">Search</TabsTrigger>
             <TabsTrigger value="doi" className="data-[state=active]:bg-violet-600">DOI Lookup</TabsTrigger>
             <TabsTrigger value="saved" className="data-[state=active]:bg-violet-600">
@@ -366,13 +366,13 @@ export default function PaperSearch() {
             <div className="flex flex-col gap-3 mb-6">
               <div className="flex gap-2">
                 <div className="relative flex-1">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
                   <Input
                     placeholder="Search papers, topics, authors…"
                     value={query}
                     onChange={e => setQuery(e.target.value)}
                     onKeyDown={e => e.key === 'Enter' && runSearch(1)}
-                    className="pl-9 bg-slate-800 border-slate-600 text-slate-100 placeholder:text-slate-500"
+                    className="pl-9 bg-gray-100 border-gray-300 text-gray-900 placeholder:text-gray-400"
                   />
                 </div>
                 <Button onClick={() => runSearch(1)} disabled={loading || !query.trim()}
@@ -384,19 +384,19 @@ export default function PaperSearch() {
 
               <div className="flex gap-2">
                 <Select value={yearFrom} onValueChange={setYearFrom}>
-                  <SelectTrigger className="w-36 bg-slate-800 border-slate-600 text-slate-300">
+                  <SelectTrigger className="w-36 bg-gray-100 border-gray-300 text-gray-700">
                     <SelectValue placeholder="From year" />
                   </SelectTrigger>
-                  <SelectContent className="bg-slate-800 border-slate-600">
+                  <SelectContent className="bg-gray-100 border-gray-300">
                     <SelectItem value="any">Any year</SelectItem>
                     {years.map(y => <SelectItem key={y} value={String(y)}>{y}</SelectItem>)}
                   </SelectContent>
                 </Select>
                 <Select value={yearTo} onValueChange={setYearTo}>
-                  <SelectTrigger className="w-36 bg-slate-800 border-slate-600 text-slate-300">
+                  <SelectTrigger className="w-36 bg-gray-100 border-gray-300 text-gray-700">
                     <SelectValue placeholder="To year" />
                   </SelectTrigger>
-                  <SelectContent className="bg-slate-800 border-slate-600">
+                  <SelectContent className="bg-gray-100 border-gray-300">
                     <SelectItem value="any">Any year</SelectItem>
                     {years.map(y => <SelectItem key={y} value={String(y)}>{y}</SelectItem>)}
                   </SelectContent>
@@ -411,7 +411,7 @@ export default function PaperSearch() {
             )}
 
             {total > 0 && (
-              <p className="text-xs text-slate-500 mb-4">{total.toLocaleString()} results</p>
+              <p className="text-xs text-gray-400 mb-4">{total.toLocaleString()} results</p>
             )}
 
             <div className="space-y-3">
@@ -425,20 +425,20 @@ export default function PaperSearch() {
               <div className="flex items-center justify-center gap-3 mt-6">
                 <Button variant="outline" size="sm" disabled={page <= 1}
                   onClick={() => runSearch(page - 1)}
-                  className="border-slate-600 text-slate-300 gap-1">
+                  className="border-gray-300 text-gray-700 gap-1">
                   <ChevronLeft className="w-4 h-4" /> Prev
                 </Button>
-                <span className="text-sm text-slate-400">Page {page} of {totalPages}</span>
+                <span className="text-sm text-gray-500">Page {page} of {totalPages}</span>
                 <Button variant="outline" size="sm" disabled={page >= totalPages}
                   onClick={() => runSearch(page + 1)}
-                  className="border-slate-600 text-slate-300 gap-1">
+                  className="border-gray-300 text-gray-700 gap-1">
                   Next <ChevronRight className="w-4 h-4" />
                 </Button>
               </div>
             )}
 
             {results.length === 0 && !loading && !error && (
-              <div className="text-center py-20 text-slate-500">
+              <div className="text-center py-20 text-gray-400">
                 <Search className="w-10 h-10 mx-auto mb-3 opacity-30" />
                 <p>Search 250M+ academic papers</p>
                 <p className="text-xs mt-1">Try a topic, author name, or journal</p>
@@ -454,7 +454,7 @@ export default function PaperSearch() {
                 value={doiInput}
                 onChange={e => setDoiInput(e.target.value)}
                 onKeyDown={e => e.key === 'Enter' && lookupDoi()}
-                className="bg-slate-800 border-slate-600 text-slate-100 placeholder:text-slate-500"
+                className="bg-gray-100 border-gray-300 text-gray-900 placeholder:text-gray-400"
               />
               <Button onClick={lookupDoi} disabled={doiLoading || !doiInput.trim()}
                 className="bg-violet-600 hover:bg-violet-700 gap-2">
@@ -471,7 +471,7 @@ export default function PaperSearch() {
               <PaperCard paper={doiResult} onCite={setCitingPaper} onSave={savePaper} saved={isSaved(doiResult)} />
             )}
             {!doiResult && !doiLoading && !doiError && (
-              <div className="text-center py-20 text-slate-500">
+              <div className="text-center py-20 text-gray-400">
                 <FileText className="w-10 h-10 mx-auto mb-3 opacity-30" />
                 <p>Enter a DOI to fetch paper details</p>
               </div>
@@ -481,7 +481,7 @@ export default function PaperSearch() {
           {/* Saved tab */}
           <TabsContent value="saved">
             {savedPapers.length === 0 ? (
-              <div className="text-center py-20 text-slate-500">
+              <div className="text-center py-20 text-gray-400">
                 <Star className="w-10 h-10 mx-auto mb-3 opacity-30" />
                 <p>No saved papers yet</p>
                 <p className="text-xs mt-1">Star papers from search results to save them here</p>

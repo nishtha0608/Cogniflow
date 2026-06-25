@@ -60,11 +60,11 @@ function ExchangeCard({ exchange, index }) {
           <Icon size={13} className="text-white" />
         </div>
         <span className={cn('text-xs font-bold', style.text)}>{style.name}</span>
-        <span className="text-xs text-slate-600">Round {exchange.round}</span>
+        <span className="text-xs text-gray-400">Round {exchange.round}</span>
       </div>
-      <p className="text-sm text-slate-300 leading-relaxed">{exchange.argument}</p>
+      <p className="text-sm text-gray-700 leading-relaxed">{exchange.argument}</p>
       <div className={cn('rounded-lg px-3 py-2 border', style.bg, style.border)}>
-        <p className="text-xs text-slate-500 mb-0.5 font-medium">Key claim</p>
+        <p className="text-xs text-gray-400 mb-0.5 font-medium">Key claim</p>
         <p className={cn('text-xs font-semibold', style.text)}>{exchange.key_claim}</p>
       </div>
     </motion.div>
@@ -74,9 +74,9 @@ function ExchangeCard({ exchange, index }) {
 function RoundDivider({ round }) {
   return (
     <div className="flex items-center gap-3 py-1">
-      <div className="flex-1 h-px bg-slate-800" />
-      <span className="text-xs text-slate-600 font-semibold uppercase tracking-widest">Round {round}</span>
-      <div className="flex-1 h-px bg-slate-800" />
+      <div className="flex-1 h-px bg-gray-100" />
+      <span className="text-xs text-gray-400 font-semibold uppercase tracking-widest">Round {round}</span>
+      <div className="flex-1 h-px bg-gray-100" />
     </div>
   );
 }
@@ -128,7 +128,7 @@ export default function AgentDebate() {
   }, {}) || {};
 
   return (
-    <div className="min-h-screen bg-slate-950 p-6 md:p-8">
+    <div className="min-h-screen bg-violet-50 p-6 md:p-8">
       <div className="max-w-2xl mx-auto space-y-8">
 
         {/* Header */}
@@ -138,8 +138,8 @@ export default function AgentDebate() {
               <Swords size={20} className="text-white" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-white">Debate Chamber</h1>
-              <p className="text-sm text-slate-500">Two AI agents argue opposing sides of your hypothesis across 3 live rounds</p>
+              <h1 className="text-2xl font-bold text-gray-900">Debate Chamber</h1>
+              <p className="text-sm text-gray-400">Two AI agents argue opposing sides of your hypothesis across 3 live rounds</p>
             </div>
           </div>
           <div className="flex items-center gap-4 pt-1">
@@ -147,28 +147,28 @@ export default function AgentDebate() {
               <div className="w-5 h-5 rounded bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center">
                 <Shield size={11} className="text-white" />
               </div>
-              <span className="text-xs text-slate-400">Dr. Advocate defends</span>
+              <span className="text-xs text-gray-500">Dr. Advocate defends</span>
             </div>
-            <Swords size={12} className="text-slate-600" />
+            <Swords size={12} className="text-gray-400" />
             <div className="flex items-center gap-2">
               <div className="w-5 h-5 rounded bg-gradient-to-br from-rose-500 to-pink-600 flex items-center justify-center">
                 <Swords size={11} className="text-white" />
               </div>
-              <span className="text-xs text-slate-400">Dr. Contradict challenges</span>
+              <span className="text-xs text-gray-500">Dr. Contradict challenges</span>
             </div>
           </div>
         </div>
 
         {/* Input */}
         {!result && (
-          <div className="rounded-2xl bg-slate-900/60 border border-white/5 p-5 space-y-4">
-            <label className="text-sm font-medium text-slate-400">Your hypothesis</label>
+          <div className="rounded-2xl bg-white/80 border border-gray-200 p-5 space-y-4">
+            <label className="text-sm font-medium text-gray-500">Your hypothesis</label>
             <textarea
               value={hypothesis}
               onChange={e => setHypothesis(e.target.value)}
               onKeyDown={e => { if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) runDebate(); }}
               placeholder="Enter a bold research claim — the two agents will fight over it…"
-              className="w-full bg-slate-800/60 border border-slate-700/40 rounded-xl px-4 py-3 text-sm text-white placeholder-slate-500 resize-none focus:outline-none focus:border-rose-500/40 transition-colors"
+              className="w-full bg-gray-100 border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900 placeholder-slate-500 resize-none focus:outline-none focus:border-rose-500/40 transition-colors"
               rows={3}
             />
 
@@ -177,7 +177,7 @@ export default function AgentDebate() {
                 <button
                   key={h}
                   onClick={() => setHypothesis(h)}
-                  className="text-xs px-2.5 py-1 rounded-full bg-slate-800 border border-slate-700/40 text-slate-400 hover:text-slate-200 hover:bg-slate-700 transition-colors"
+                  className="text-xs px-2.5 py-1 rounded-full bg-gray-100 border border-gray-200 text-gray-500 hover:text-gray-800 hover:bg-gray-200 transition-colors"
                 >
                   {h.slice(0, 52)}…
                 </button>
@@ -191,7 +191,7 @@ export default function AgentDebate() {
                 'w-full flex items-center justify-center gap-2 py-3 rounded-xl font-semibold text-sm transition-all',
                 hypothesis.trim() && !loading
                   ? 'bg-gradient-to-r from-rose-500 to-orange-600 text-white hover:opacity-90 shadow-lg shadow-rose-500/20'
-                  : 'bg-slate-800 text-slate-500 cursor-not-allowed'
+                  : 'bg-gray-100 text-gray-400 cursor-not-allowed'
               )}
             >
               {loading ? <Loader2 size={15} className="animate-spin" /> : <Swords size={15} />}
@@ -220,7 +220,7 @@ export default function AgentDebate() {
                   )}
                 />
               ))}
-              <p className="text-center text-xs text-slate-500 animate-pulse">Agents are formulating their arguments…</p>
+              <p className="text-center text-xs text-gray-400 animate-pulse">Agents are formulating their arguments…</p>
             </motion.div>
           )}
         </AnimatePresence>
@@ -230,12 +230,12 @@ export default function AgentDebate() {
           {result && !loading && (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
               <div className="flex items-center justify-between">
-                <h2 className="text-sm font-semibold text-white">
+                <h2 className="text-sm font-semibold text-gray-900">
                   Debate: <span className="text-rose-400">{result.hypothesis}</span>
                 </h2>
                 <button
                   onClick={() => { setResult(null); setHypothesis(''); }}
-                  className="flex items-center gap-1.5 text-xs text-slate-500 hover:text-slate-300 transition-colors"
+                  className="flex items-center gap-1.5 text-xs text-gray-400 hover:text-gray-700 transition-colors"
                 >
                   <RotateCcw size={12} />
                   New debate
@@ -262,7 +262,7 @@ export default function AgentDebate() {
                   <Scale size={16} className="text-amber-400" />
                   <span className="text-sm font-bold text-amber-400">Judge's Verdict</span>
                 </div>
-                <p className="text-sm text-slate-300 leading-relaxed">{result.verdict}</p>
+                <p className="text-sm text-gray-700 leading-relaxed">{result.verdict}</p>
 
                 <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                   <div className="rounded-xl bg-emerald-500/5 border border-emerald-500/15 p-3 space-y-1.5">
@@ -270,14 +270,14 @@ export default function AgentDebate() {
                       <Trophy size={12} className="text-emerald-400" />
                       <span className="text-xs font-semibold text-emerald-400">Strongest argument</span>
                     </div>
-                    <p className="text-xs text-slate-400 leading-relaxed">{result.strongest_argument}</p>
+                    <p className="text-xs text-gray-500 leading-relaxed">{result.strongest_argument}</p>
                   </div>
                   <div className="rounded-xl bg-rose-500/5 border border-rose-500/15 p-3 space-y-1.5">
                     <div className="flex items-center gap-2">
                       <AlertTriangle size={12} className="text-rose-400" />
                       <span className="text-xs font-semibold text-rose-400">Weakest link</span>
                     </div>
-                    <p className="text-xs text-slate-400 leading-relaxed">{result.weakest_link}</p>
+                    <p className="text-xs text-gray-500 leading-relaxed">{result.weakest_link}</p>
                   </div>
                 </div>
               </motion.div>

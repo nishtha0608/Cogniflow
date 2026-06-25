@@ -114,26 +114,26 @@ export default function Memory() {
   return (
     <div className="h-[calc(100vh-3.5rem)] flex flex-col">
       {/* Header */}
-      <div className="p-6 border-b border-slate-800 bg-slate-900/50">
+      <div className="p-6 border-b border-gray-200 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50">
         <div className="max-w-4xl mx-auto">
-          <h1 className="text-2xl font-bold text-white mb-2">Research Memory</h1>
-          <p className="text-slate-400 mb-4">Track your research journey and revisit past insights</p>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Research Memory</h1>
+          <p className="text-gray-500 dark:text-slate-400 mb-4">Track your research journey and revisit past insights</p>
           
           <div className="flex gap-3 flex-wrap">
             <div className="relative flex-1 min-w-[160px]">
-              <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+              <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-slate-400" />
               <Input
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search your research history..."
-                className="pl-10 bg-slate-800 border-slate-700"
+                className="pl-10 bg-gray-100 dark:bg-slate-800 border-gray-300 dark:border-slate-700 dark:text-slate-100 dark:placeholder-slate-500"
               />
             </div>
 
             {/* Project filter */}
             {projects.length > 1 && (
               <Select value={filterProject} onValueChange={setFilterProject}>
-                <SelectTrigger className="w-52 bg-slate-800 border-slate-700">
+                <SelectTrigger className="w-52 bg-gray-100 dark:bg-slate-800 border-gray-300 dark:border-slate-700 dark:text-slate-100">
                   <FolderOpen size={14} className="mr-2 shrink-0" />
                   <SelectValue />
                 </SelectTrigger>
@@ -150,7 +150,7 @@ export default function Memory() {
             )}
 
             <Select value={filterType} onValueChange={setFilterType}>
-              <SelectTrigger className="w-44 bg-slate-800 border-slate-700">
+              <SelectTrigger className="w-44 bg-gray-100 dark:bg-slate-800 border-gray-300 dark:border-slate-700 dark:text-slate-100">
                 <Filter size={14} className="mr-2" />
                 <SelectValue />
               </SelectTrigger>
@@ -171,14 +171,14 @@ export default function Memory() {
           {Object.entries(groupedActivities).map(([date, items]) => (
             <div key={date} className="mb-8">
               <div className="flex items-center gap-3 mb-4">
-                <Calendar size={16} className="text-slate-500" />
-                <h3 className="text-sm font-medium text-slate-400">
+                <Calendar size={16} className="text-gray-400 dark:text-slate-500" />
+                <h3 className="text-sm font-medium text-gray-500 dark:text-slate-400">
                   {isValid(new Date(date)) ? format(new Date(date), 'EEEE, MMMM d, yyyy') : date}
                 </h3>
-                <div className="flex-1 h-px bg-slate-800" />
+                <div className="flex-1 h-px bg-gray-100 dark:bg-slate-800" />
               </div>
 
-              <div className="space-y-3 pl-6 border-l-2 border-slate-800">
+              <div className="space-y-3 pl-6 border-l-2 border-gray-200 dark:border-slate-700">
                 {items.map((activity) => (
                   <ActivityCard key={`${activity.type}-${activity.id}`} activity={activity} />
                 ))}
@@ -188,9 +188,9 @@ export default function Memory() {
 
           {filteredActivities.length === 0 && (
             <div className="text-center py-16">
-              <Clock size={48} className="mx-auto text-slate-600 mb-4" />
-              <h3 className="text-lg font-medium text-white mb-2">No Activity Found</h3>
-              <p className="text-slate-400">
+              <Clock size={48} className="mx-auto text-gray-400 dark:text-slate-500 mb-4" />
+              <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">No Activity Found</h3>
+              <p className="text-gray-500 dark:text-slate-400">
                 Your research activities will appear here
               </p>
             </div>
@@ -199,7 +199,7 @@ export default function Memory() {
       </ScrollArea>
 
       {/* Insights Panel */}
-      <div className="border-t border-slate-800 bg-slate-900/30 p-4">
+      <div className="border-t border-gray-200 dark:border-slate-800 bg-white/30 dark:bg-slate-900/30 p-4">
         <div className="max-w-4xl mx-auto">
           <div className="grid md:grid-cols-4 gap-4">
             <InsightCard
@@ -243,7 +243,7 @@ function ActivityCard({ activity }) {
   };
 
   return (
-    <Card className="bg-slate-900/50 border-slate-800 hover:border-slate-700 transition-all cursor-pointer group">
+    <Card className="bg-white/50 dark:bg-slate-900/50 border-gray-200 dark:border-slate-800 hover:border-gray-300 dark:hover:border-slate-700 transition-all cursor-pointer group">
       <CardContent className="p-4">
         <div className="flex items-start gap-4">
           <div className={cn("p-2 rounded-lg border", colorClasses[activity.color])}>
@@ -252,17 +252,17 @@ function ActivityCard({ activity }) {
           <div className="flex-1 min-w-0">
             <div className="flex items-start justify-between">
               <div>
-                <h4 className="font-medium text-white truncate">{activity.title}</h4>
-                <p className="text-sm text-slate-400 mt-0.5">{activity.description}</p>
+                <h4 className="font-medium text-gray-900 dark:text-white truncate">{activity.title}</h4>
+                <p className="text-sm text-gray-500 dark:text-slate-400 mt-0.5">{activity.description}</p>
               </div>
-              <span className="text-xs text-slate-500 flex-shrink-0">
+              <span className="text-xs text-gray-400 dark:text-slate-500 flex-shrink-0">
                 {isValid(new Date(activity.date))
                   ? formatDistanceToNow(new Date(activity.date), { addSuffix: true })
                   : ''}
               </span>
             </div>
           </div>
-          <ChevronRight size={16} className="text-slate-600 group-hover:text-slate-400 transition-colors" />
+          <ChevronRight size={16} className="text-gray-400 dark:text-slate-500 group-hover:text-gray-500 dark:group-hover:text-slate-400 transition-colors" />
         </div>
       </CardContent>
     </Card>
@@ -278,12 +278,12 @@ function InsightCard({ icon: Icon, label, value, color }) {
   };
 
   return (
-    <div className="p-4 rounded-lg bg-slate-800/30 border border-slate-700/50">
+    <div className="p-4 rounded-lg bg-white/70 dark:bg-slate-900/70 border border-gray-300/50 dark:border-slate-700/50">
       <div className="flex items-center gap-3">
         <Icon size={18} className={colorClasses[color]} />
         <div>
-          <p className="text-xl font-bold text-white">{value}</p>
-          <p className="text-xs text-slate-400">{label}</p>
+          <p className="text-xl font-bold text-gray-900 dark:text-white">{value}</p>
+          <p className="text-xs text-gray-500 dark:text-slate-400">{label}</p>
         </div>
       </div>
     </div>

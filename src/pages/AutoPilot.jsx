@@ -51,7 +51,7 @@ function StepCard({ step, index, isLive }) {
         </div>
         <div className="flex items-center gap-2">
           <span className={cn('text-xs font-bold uppercase tracking-widest', meta.text)}>{meta.label}</span>
-          <span className="text-xs text-slate-600">Step {step.step}</span>
+          <span className="text-xs text-gray-400">Step {step.step}</span>
         </div>
         {isLive && (
           <div className="ml-auto flex items-center gap-1.5">
@@ -63,16 +63,16 @@ function StepCard({ step, index, isLive }) {
 
       <div className="space-y-2 pl-10">
         <div>
-          <p className="text-xs text-slate-500 mb-0.5 font-medium">Thought</p>
-          <p className="text-sm text-slate-300 italic">{step.thought}</p>
+          <p className="text-xs text-gray-400 mb-0.5 font-medium">Thought</p>
+          <p className="text-sm text-gray-700 italic">{step.thought}</p>
         </div>
         <div>
-          <p className="text-xs text-slate-500 mb-0.5 font-medium">Action</p>
-          <p className="text-sm text-slate-400">{step.action}</p>
+          <p className="text-xs text-gray-400 mb-0.5 font-medium">Action</p>
+          <p className="text-sm text-gray-500">{step.action}</p>
         </div>
         <div className={cn('rounded-lg p-2.5 border', meta.bg, meta.border)}>
-          <p className="text-xs text-slate-500 mb-0.5 font-medium">Observation</p>
-          <p className="text-sm text-white font-medium">{step.observation}</p>
+          <p className="text-xs text-gray-400 mb-0.5 font-medium">Observation</p>
+          <p className="text-sm text-gray-900 font-medium">{step.observation}</p>
         </div>
       </div>
     </motion.div>
@@ -100,7 +100,7 @@ function ConfidenceMeter({ score }) {
         />
         <text x="45" y="48" textAnchor="middle" fill={color} fontSize="16" fontWeight="bold">{score}</text>
       </svg>
-      <span className="text-xs text-slate-500">Confidence</span>
+      <span className="text-xs text-gray-400">Confidence</span>
     </div>
   );
 }
@@ -232,7 +232,7 @@ export default function AutoPilot() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 p-6 md:p-8">
+    <div className="min-h-screen bg-violet-50 p-6 md:p-8">
       <div className="max-w-3xl mx-auto space-y-8">
 
         {/* Header */}
@@ -242,15 +242,15 @@ export default function AutoPilot() {
               <Bot size={20} className="text-white" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-white">AutoPilot</h1>
-              <p className="text-sm text-slate-500">Deep research on demand — for questions that need investigation, not just a quick answer</p>
+              <h1 className="text-2xl font-bold text-gray-900">AutoPilot</h1>
+              <p className="text-sm text-gray-400">Deep research on demand — for questions that need investigation, not just a quick answer</p>
             </div>
           </div>
 
           {/* Job-to-be-done callout */}
           <div className="rounded-xl bg-cyan-500/5 border border-cyan-500/20 px-4 py-3 flex items-start gap-3">
             <Zap size={15} className="text-cyan-400 mt-0.5 shrink-0" />
-            <p className="text-sm text-slate-300">
+            <p className="text-sm text-gray-700">
               <span className="text-cyan-400 font-semibold">Use AutoPilot when</span> your question requires reading across sources, weighing conflicting evidence, or mapping a field — things that normally take hours. AutoPilot plans, searches, analyzes, and hands you a structured report with a confidence score.
             </p>
           </div>
@@ -258,29 +258,29 @@ export default function AutoPilot() {
           {/* Use cases */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
             {USE_CASES.map(({ icon: Icon, label, desc }) => (
-              <div key={label} className="rounded-xl bg-slate-900/60 border border-white/5 p-3 space-y-1">
+              <div key={label} className="rounded-xl bg-white/80 border border-gray-200 p-3 space-y-1">
                 <div className="flex items-center gap-2">
                   <Icon size={13} className="text-cyan-400" />
-                  <span className="text-xs font-semibold text-white">{label}</span>
+                  <span className="text-xs font-semibold text-gray-900">{label}</span>
                 </div>
-                <p className="text-xs text-slate-500">{desc}</p>
+                <p className="text-xs text-gray-400">{desc}</p>
               </div>
             ))}
           </div>
         </div>
 
         {/* Input */}
-        <div className="rounded-2xl bg-slate-900/60 border border-white/5 p-5 space-y-4">
+        <div className="rounded-2xl bg-white/80 border border-gray-200 p-5 space-y-4">
           <div>
-            <label className="text-sm font-medium text-slate-300">What do you need to investigate?</label>
-            <p className="text-xs text-slate-500 mt-0.5">Be specific — the more focused your question, the sharper the report</p>
+            <label className="text-sm font-medium text-gray-700">What do you need to investigate?</label>
+            <p className="text-xs text-gray-400 mt-0.5">Be specific — the more focused your question, the sharper the report</p>
           </div>
           <textarea
             value={question}
             onChange={e => setQuestion(e.target.value)}
             onKeyDown={e => { if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) runAutopilot(); }}
             placeholder="e.g. What methodological gaps exist in studies on remote work productivity post-2020?"
-            className="w-full bg-slate-800/60 border border-slate-700/40 rounded-xl px-4 py-3 text-sm text-white placeholder-slate-500 resize-none focus:outline-none focus:border-cyan-500/40 transition-colors"
+            className="w-full bg-gray-100 border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900 placeholder-slate-500 resize-none focus:outline-none focus:border-cyan-500/40 transition-colors"
             rows={3}
           />
 
@@ -290,7 +290,7 @@ export default function AutoPilot() {
               <button
                 key={q}
                 onClick={() => setQuestion(q)}
-                className="text-xs px-2.5 py-1 rounded-full bg-slate-800 border border-slate-700/40 text-slate-400 hover:text-slate-200 hover:bg-slate-700 transition-colors"
+                className="text-xs px-2.5 py-1 rounded-full bg-gray-100 border border-gray-200 text-gray-500 hover:text-gray-800 hover:bg-gray-200 transition-colors"
               >
                 {q.slice(0, 48)}…
               </button>
@@ -299,7 +299,7 @@ export default function AutoPilot() {
 
           <div className="flex items-center justify-between">
             {activeProject && (
-              <span className="text-xs text-slate-500">
+              <span className="text-xs text-gray-400">
                 Context: <span className="text-cyan-400">{activeProject.title}</span>
               </span>
             )}
@@ -310,7 +310,7 @@ export default function AutoPilot() {
                 'ml-auto flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-sm transition-all',
                 question.trim() && !loading
                   ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white hover:opacity-90 shadow-lg shadow-cyan-500/20'
-                  : 'bg-slate-800 text-slate-500 cursor-not-allowed'
+                  : 'bg-gray-100 text-gray-400 cursor-not-allowed'
               )}
             >
               {loading ? <Loader2 size={15} className="animate-spin" /> : <Play size={15} />}
@@ -329,7 +329,7 @@ export default function AutoPilot() {
             >
               <div className="flex items-center gap-2">
                 {loading && <Loader2 size={14} className="text-cyan-400 animate-spin" />}
-                <span className="text-xs font-semibold text-slate-500 uppercase tracking-widest">
+                <span className="text-xs font-semibold text-gray-400 uppercase tracking-widest">
                   {loading ? 'Researching — this takes a moment…' : 'Research trace'}
                 </span>
               </div>
@@ -347,10 +347,10 @@ export default function AutoPilot() {
                 <motion.div
                   animate={{ opacity: [0.4, 1, 0.4] }}
                   transition={{ repeat: Infinity, duration: 1.5 }}
-                  className="flex items-center gap-3 px-4 py-3 rounded-xl bg-slate-800/40 border border-slate-700/20"
+                  className="flex items-center gap-3 px-4 py-3 rounded-xl bg-gray-100/70 border border-gray-300/20"
                 >
                   <CircleDot size={14} className="text-cyan-400" />
-                  <span className="text-sm text-slate-500">Processing next step…</span>
+                  <span className="text-sm text-gray-400">Processing next step…</span>
                 </motion.div>
               )}
             </motion.div>
@@ -375,14 +375,14 @@ export default function AutoPilot() {
                 <div className="flex items-center gap-2">
                   <button
                     onClick={handleDownloadPDF}
-                    className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 transition-all"
+                    className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 hover:text-gray-900 border border-gray-300 transition-all"
                   >
                     <Download size={12} />
                     Export PDF
                   </button>
                   <button
                     onClick={() => { setResult(null); setVisibleSteps([]); setQuestion(''); }}
-                    className="flex items-center gap-1.5 text-xs text-slate-500 hover:text-slate-300 transition-colors"
+                    className="flex items-center gap-1.5 text-xs text-gray-400 hover:text-gray-700 transition-colors"
                   >
                     <RefreshCw size={12} />
                     New query
@@ -393,17 +393,17 @@ export default function AutoPilot() {
               {/* Report card */}
               <div className="rounded-2xl bg-gradient-to-br from-slate-900 to-slate-900/60 border border-emerald-500/20 overflow-hidden">
                 {/* Document header */}
-                <div className="px-6 pt-6 pb-5 border-b border-white/5 space-y-3">
+                <div className="px-6 pt-6 pb-5 border-b border-gray-200 space-y-3">
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-2">
                         <span className="text-xs font-bold uppercase tracking-widest text-cyan-400 border border-cyan-500/30 px-2 py-0.5 rounded">AutoPilot Research Report</span>
                       </div>
-                      <h2 className="text-base font-semibold text-white leading-snug">{resultQuestion}</h2>
+                      <h2 className="text-base font-semibold text-gray-900 leading-snug">{resultQuestion}</h2>
                     </div>
                     <ConfidenceMeter score={result.confidence} />
                   </div>
-                  <div className="flex items-center gap-4 text-xs text-slate-500 font-mono">
+                  <div className="flex items-center gap-4 text-xs text-gray-400 font-mono">
                     <span>{new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
                     {activeProject?.title && (
                       <>
@@ -422,13 +422,13 @@ export default function AutoPilot() {
                     ref={printRef}
                     className="prose prose-sm prose-invert max-w-none
                       prose-headings:text-white prose-headings:font-semibold
-                      prose-h2:text-base prose-h2:mt-6 prose-h2:mb-3 prose-h2:border-b prose-h2:border-white/10 prose-h2:pb-2
+                      prose-h2:text-base prose-h2:mt-6 prose-h2:mb-3 prose-h2:border-b prose-h2:border-gray-200 prose-h2:pb-2
                       prose-h3:text-sm prose-h3:mt-4 prose-h3:mb-2
-                      prose-p:text-slate-300 prose-p:leading-relaxed prose-p:text-sm
-                      prose-li:text-slate-300 prose-li:text-sm
+                      prose-p:text-gray-700 prose-p:leading-relaxed prose-p:text-sm
+                      prose-li:text-gray-700 prose-li:text-sm
                       prose-strong:text-white
-                      prose-blockquote:border-cyan-500/40 prose-blockquote:text-slate-400
-                      prose-hr:border-white/10"
+                      prose-blockquote:border-cyan-500/40 prose-blockquote:text-gray-500
+                      prose-hr:border-gray-200"
                   >
                     <ReactMarkdown>{result.final_report}</ReactMarkdown>
                   </div>
@@ -437,8 +437,8 @@ export default function AutoPilot() {
                 {/* Next questions */}
                 {result.next_questions?.length > 0 && (
                   <div className="px-6 pb-6 space-y-2">
-                    <div className="border-t border-white/5 pt-4 mb-3">
-                      <p className="text-xs font-semibold text-slate-500 uppercase tracking-widest">
+                    <div className="border-t border-gray-200 pt-4 mb-3">
+                      <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest">
                         Dig deeper — run these next
                       </p>
                     </div>
@@ -446,10 +446,10 @@ export default function AutoPilot() {
                       <button
                         key={i}
                         onClick={() => { setQuestion(q); setResult(null); setVisibleSteps([]); }}
-                        className="w-full flex items-center gap-3 text-left px-3 py-2 rounded-xl hover:bg-slate-800/60 transition-colors group"
+                        className="w-full flex items-center gap-3 text-left px-3 py-2 rounded-xl hover:bg-gray-100 transition-colors group"
                       >
-                        <ArrowRight size={13} className="text-slate-600 group-hover:text-cyan-400 transition-colors shrink-0" />
-                        <span className="text-sm text-slate-400 group-hover:text-slate-200 transition-colors">{q}</span>
+                        <ArrowRight size={13} className="text-gray-400 group-hover:text-cyan-400 transition-colors shrink-0" />
+                        <span className="text-sm text-gray-500 group-hover:text-gray-800 transition-colors">{q}</span>
                       </button>
                     ))}
                   </div>

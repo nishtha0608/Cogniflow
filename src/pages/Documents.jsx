@@ -145,23 +145,23 @@ export default function Documents() {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-white">Documents</h1>
-          <p className="text-slate-400 mt-1">Manage your research documents and files</p>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Documents</h1>
+          <p className="text-gray-500 dark:text-slate-400 mt-1">Manage your research documents and files</p>
         </div>
         <div className="flex gap-2">
           <Dialog open={showUploadDialog} onOpenChange={setShowUploadDialog}>
             <DialogTrigger asChild>
-              <Button variant="outline" className="border-slate-700">
+              <Button variant="outline" className="border-gray-300">
                 <Upload size={16} className="mr-2" />
                 Upload
               </Button>
             </DialogTrigger>
-            <DialogContent className="bg-slate-900 border-slate-700">
+            <DialogContent className="bg-white dark:bg-slate-900 border-gray-300 dark:border-slate-700">
               <DialogHeader>
                 <DialogTitle>Upload Document</DialogTitle>
               </DialogHeader>
               <div className="py-6">
-                <div className="border-2 border-dashed border-slate-700 rounded-lg p-8 text-center hover:border-slate-600 transition-colors">
+                <div className="border-2 border-dashed border-gray-300 dark:border-slate-700 rounded-lg p-8 text-center hover:border-gray-300 dark:hover:border-slate-600 transition-colors">
                   <input
                     type="file"
                     accept=".pdf,.doc,.docx,.txt"
@@ -174,16 +174,16 @@ export default function Documents() {
                     {uploading ? (
                       <>
                         <Loader2 size={40} className="animate-spin mx-auto text-blue-400 mb-3" />
-                        <p className="text-slate-300 font-medium">Uploading and processing...</p>
-                        <p className="text-xs text-slate-500 mt-1">This may take a moment for large files</p>
+                        <p className="text-gray-700 dark:text-slate-300 font-medium">Uploading and processing...</p>
+                        <p className="text-xs text-gray-400 dark:text-slate-500 mt-1">This may take a moment for large files</p>
                       </>
                     ) : (
                       <>
-                        <Upload size={40} className="mx-auto text-slate-400 mb-3" />
-                        <p className="text-slate-300 font-medium mb-1">
+                        <Upload size={40} className="mx-auto text-gray-500 dark:text-slate-400 mb-3" />
+                        <p className="text-gray-700 dark:text-slate-300 font-medium mb-1">
                           Click to upload or drag and drop
                         </p>
-                        <p className="text-xs text-slate-500">PDF, DOC, DOCX, TXT up to 10MB</p>
+                        <p className="text-xs text-gray-400 dark:text-slate-500">PDF, DOC, DOCX, TXT up to 10MB</p>
                       </>
                     )}
                   </label>
@@ -208,16 +208,16 @@ export default function Documents() {
       {/* Filters */}
       <div className="flex gap-3 mb-6">
         <div className="relative flex-1">
-          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-slate-400" />
           <Input
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search documents..."
-            className="pl-10 bg-slate-800 border-slate-700"
+            className="pl-10 bg-gray-100 dark:bg-slate-800 border-gray-300 dark:border-slate-700 dark:text-slate-100 dark:placeholder-slate-500"
           />
         </div>
         <Select value={filterType} onValueChange={setFilterType}>
-          <SelectTrigger className="w-48 bg-slate-800 border-slate-700">
+          <SelectTrigger className="w-48 bg-gray-100 dark:bg-slate-800 border-gray-300 dark:border-slate-700 dark:text-slate-100">
             <Filter size={14} className="mr-2" />
             <SelectValue />
           </SelectTrigger>
@@ -233,20 +233,20 @@ export default function Documents() {
       {filteredDocuments.length > 0 ? (
         <div className="space-y-2">
           {filteredDocuments.map((doc) => (
-            <Card key={doc.id} className="bg-slate-900/50 border-slate-800 hover:border-slate-700 transition-all">
+            <Card key={doc.id} className="bg-white/50 dark:bg-slate-900/50 border-gray-200 dark:border-slate-800 hover:border-gray-300 dark:hover:border-slate-700 transition-all">
               <CardContent className="p-4">
                 <div className="flex items-center gap-4">
-                  <div className="p-2 rounded-lg bg-slate-800">
-                    <FileText size={20} className="text-slate-400" />
+                  <div className="p-2 rounded-lg bg-gray-100 dark:bg-slate-800">
+                    <FileText size={20} className="text-gray-500 dark:text-slate-400" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
-                      <h3 className="font-medium text-white truncate">{doc.title}</h3>
+                      <h3 className="font-medium text-gray-900 dark:text-white truncate">{doc.title}</h3>
                       <Badge className={typeColors[doc.type] || typeColors.notes}>
                         {doc.type}
                       </Badge>
                     </div>
-                    <div className="flex items-center gap-4 mt-1 text-sm text-slate-400">
+                    <div className="flex items-center gap-4 mt-1 text-sm text-gray-500 dark:text-slate-400">
                       <span>{doc.word_count || 0} words</span>
                       <span>Updated {format(new Date(doc.updated_date), 'MMM d, yyyy')}</span>
                     </div>
@@ -254,14 +254,14 @@ export default function Documents() {
                   <div className="flex items-center gap-2">
                     {doc.file_url && (
                       <a href={doc.file_url} target="_blank" rel="noopener noreferrer">
-                        <Button variant="ghost" size="icon" className="text-slate-400">
+                        <Button variant="ghost" size="icon" className="text-gray-500 dark:text-slate-400">
                           <Eye size={16} />
                         </Button>
                       </a>
                     )}
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon" className="text-slate-400">
+                        <Button variant="ghost" size="icon" className="text-gray-500 dark:text-slate-400">
                           <MoreVertical size={16} />
                         </Button>
                       </DropdownMenuTrigger>
@@ -295,9 +295,9 @@ export default function Documents() {
         </div>
       ) : (
         <div className="text-center py-16">
-          <FileText size={48} className="mx-auto text-slate-600 mb-4" />
-          <h3 className="text-lg font-medium text-white mb-2">No Documents Found</h3>
-          <p className="text-slate-400 mb-4">
+          <FileText size={48} className="mx-auto text-gray-400 dark:text-slate-500 mb-4" />
+          <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">No Documents Found</h3>
+          <p className="text-gray-500 dark:text-slate-400 mb-4">
             Upload a document or create a new draft to get started
           </p>
         </div>

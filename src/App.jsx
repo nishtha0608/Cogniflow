@@ -7,6 +7,7 @@ import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-d
 import PageNotFound from './lib/PageNotFound';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import { ProjectProvider } from '@/lib/ProjectContext';
+import { ThemeProvider } from '@/lib/ThemeContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import LandingPage from '@/pages/LandingPage';
 import Login from '@/pages/Login';
@@ -25,8 +26,8 @@ const AuthenticatedApp = () => {
   // Show loading spinner while checking auth
   if (isLoadingPublicSettings || isLoadingAuth) {
     return (
-      <div className="fixed inset-0 flex items-center justify-center bg-slate-950">
-        <div className="w-8 h-8 border-4 border-slate-700 border-t-violet-500 rounded-full animate-spin" />
+      <div className="fixed inset-0 flex items-center justify-center bg-violet-50">
+        <div className="w-8 h-8 border-4 border-gray-300 border-t-violet-500 rounded-full animate-spin" />
       </div>
     );
   }
@@ -74,17 +75,19 @@ const AuthenticatedApp = () => {
 
 function App() {
   return (
-    <AuthProvider>
-      <QueryClientProvider client={queryClientInstance}>
-        <Router>
-          <ProjectProvider>
-            <NavigationTracker />
-            <AuthenticatedApp />
-          </ProjectProvider>
-        </Router>
-        <Toaster />
-      </QueryClientProvider>
-    </AuthProvider>
+    <ThemeProvider>
+      <AuthProvider>
+        <QueryClientProvider client={queryClientInstance}>
+          <Router>
+            <ProjectProvider>
+              <NavigationTracker />
+              <AuthenticatedApp />
+            </ProjectProvider>
+          </Router>
+          <Toaster />
+        </QueryClientProvider>
+      </AuthProvider>
+    </ThemeProvider>
   )
 }
 

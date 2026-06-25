@@ -408,16 +408,16 @@ export default function KnowledgeGraph() {
   }, {});
 
   return (
-    <div className="flex flex-col h-screen bg-slate-950 overflow-hidden" style={{ height: 'calc(100vh - 56px)' }}>
+    <div className="flex flex-col h-screen bg-violet-50 dark:bg-slate-950 overflow-hidden" style={{ height: 'calc(100vh - 56px)' }}>
       {/* Top Bar */}
-      <div className="flex items-center justify-between px-6 py-3 border-b border-slate-800/50 bg-slate-900/60 backdrop-blur shrink-0">
+      <div className="flex items-center justify-between px-6 py-3 border-b border-gray-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur shrink-0">
         <div className="flex items-center gap-3">
           <div className="p-2 rounded-xl bg-gradient-to-br from-violet-600 to-indigo-700">
             <Network size={18} className="text-white" />
           </div>
           <div>
-            <h1 className="text-base font-bold text-white">Knowledge Constellation</h1>
-            <p className="text-xs text-slate-500">
+            <h1 className="text-base font-bold text-gray-900 dark:text-white">Knowledge Constellation</h1>
+            <p className="text-xs text-gray-400 dark:text-slate-500">
               {stateRef.current.nodes.length} nodes · {stateRef.current.edges.length} connections
               {isDemo && <span className="ml-2 text-amber-500/70">(demo — add content to see your graph)</span>}
             </p>
@@ -435,16 +435,16 @@ export default function KnowledgeGraph() {
                 filter === type || filter === 'all'
                   ? 'opacity-100'
                   : 'opacity-30',
-                'border-slate-700 bg-slate-800/50 hover:bg-slate-800',
+                'border-gray-300 dark:border-slate-700 bg-gray-50 dark:bg-slate-800 hover:bg-gray-100 dark:hover:bg-slate-700',
               )}
             >
               <span
                 className="w-2 h-2 rounded-full"
                 style={{ backgroundColor: style.color }}
               />
-              <span className="text-slate-300 capitalize">{style.label}</span>
+              <span className="text-gray-700 dark:text-slate-300 capitalize">{style.label}</span>
               {counts[type] ? (
-                <span className="text-slate-500">({counts[type]})</span>
+                <span className="text-gray-400 dark:text-slate-500">({counts[type]})</span>
               ) : null}
             </button>
           ))}
@@ -453,16 +453,16 @@ export default function KnowledgeGraph() {
         {/* Controls */}
         <div className="flex items-center gap-2">
           <Button variant="ghost" size="icon" className="w-8 h-8" onClick={() => handleZoom(1)}>
-            <ZoomIn size={14} className="text-slate-400" />
+            <ZoomIn size={14} className="text-gray-500 dark:text-slate-400" />
           </Button>
           <Button variant="ghost" size="icon" className="w-8 h-8" onClick={() => handleZoom(-1)}>
-            <ZoomOut size={14} className="text-slate-400" />
+            <ZoomOut size={14} className="text-gray-500 dark:text-slate-400" />
           </Button>
           <Button variant="ghost" size="icon" className="w-8 h-8" onClick={handleReset}>
-            <Maximize2 size={14} className="text-slate-400" />
+            <Maximize2 size={14} className="text-gray-500 dark:text-slate-400" />
           </Button>
           <Button variant="ghost" size="icon" className="w-8 h-8" onClick={loadGraph}>
-            <RefreshCw size={14} className="text-slate-400" />
+            <RefreshCw size={14} className="text-gray-500 dark:text-slate-400" />
           </Button>
         </div>
       </div>
@@ -487,7 +487,7 @@ export default function KnowledgeGraph() {
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: 20 }}
-              className="absolute top-4 right-4 w-72 rounded-2xl border border-slate-700/60 bg-slate-900/90 backdrop-blur-xl shadow-2xl overflow-hidden"
+              className="absolute top-4 right-4 w-72 rounded-2xl border border-gray-300/60 dark:border-slate-700/60 bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl shadow-2xl overflow-hidden"
             >
               <div
                 className="h-1.5 w-full"
@@ -506,31 +506,31 @@ export default function KnowledgeGraph() {
                     >
                       {NODE_STYLES[selectedNode.type]?.label}
                     </Badge>
-                    <h3 className="font-semibold text-white text-sm leading-tight">
+                    <h3 className="font-semibold text-gray-900 dark:text-white text-sm leading-tight">
                       {selectedNode.label}
                     </h3>
                   </div>
                   <button
                     onClick={() => setSelectedNode(null)}
-                    className="p-1 rounded-lg hover:bg-slate-800 text-slate-500 hover:text-white transition-colors"
+                    className="p-1 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 text-gray-400 dark:text-slate-500 hover:text-gray-900 dark:hover:text-white transition-colors"
                   >
                     <X size={14} />
                   </button>
                 </div>
 
-                <div className="space-y-2 text-xs text-slate-400">
+                <div className="space-y-2 text-xs text-gray-500 dark:text-slate-400">
                   <div className="flex justify-between">
-                    <span className="text-slate-600">Node ID</span>
+                    <span className="text-gray-400 dark:text-slate-500">Node ID</span>
                     <span className="font-mono">{selectedNode.id}</span>
                   </div>
                   {selectedNode.significance && (
                     <div className="flex justify-between">
-                      <span className="text-slate-600">Significance</span>
+                      <span className="text-gray-400 dark:text-slate-500">Significance</span>
                       <span className="capitalize text-amber-400">{selectedNode.significance}</span>
                     </div>
                   )}
                   <div className="flex justify-between">
-                    <span className="text-slate-600">Connections</span>
+                    <span className="text-gray-400 dark:text-slate-500">Connections</span>
                     <span>
                       {stateRef.current.edges.filter(
                         (e) => e.source === selectedNode.id || e.target === selectedNode.id,
@@ -545,7 +545,7 @@ export default function KnowledgeGraph() {
 
         {/* Hint */}
         {graphLoaded && !selectedNode && (
-          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 px-4 py-2 rounded-full bg-slate-900/80 border border-slate-800 text-xs text-slate-500 pointer-events-none">
+          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 px-4 py-2 rounded-full bg-white/80 dark:bg-slate-900/80 border border-gray-200 dark:border-slate-800 text-xs text-gray-400 dark:text-slate-500 pointer-events-none">
             <Info size={12} />
             Click a node to inspect · Drag to reposition · Scroll to zoom · Drag canvas to pan
           </div>

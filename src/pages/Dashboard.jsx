@@ -26,6 +26,7 @@ import {
   ChevronDown,
   ChevronUp,
   RefreshCw,
+  MessageSquare,
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
@@ -98,17 +99,17 @@ function MomentumGauge({ score, label, streak }) {
           </defs>
         </svg>
         <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <span className="text-2xl font-black text-white leading-none">
+          <span className="text-2xl font-black text-gray-900 dark:text-white leading-none">
             <AnimatedNumber value={score} />
           </span>
-          <span className="text-xs text-slate-500 mt-1">/ 100</span>
+          <span className="text-xs text-gray-400 dark:text-slate-500 mt-1">/ 100</span>
         </div>
       </div>
       <div className="text-center">
-        <p className="text-sm font-bold text-white">{label}</p>
+        <p className="text-sm font-bold text-gray-900 dark:text-white">{label}</p>
         <div className="flex items-center gap-1.5 justify-center mt-1">
           <Flame size={12} className="text-orange-400" />
-          <span className="text-xs text-slate-400">{streak}-day streak</span>
+          <span className="text-xs text-gray-500 dark:text-slate-400">{streak}-day streak</span>
         </div>
       </div>
     </div>
@@ -126,7 +127,7 @@ function SerendipityCard({ connection, index }) {
       initial={{ opacity: 0, x: -12 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ delay: index * 0.1 }}
-      className="rounded-xl border border-slate-700/40 bg-slate-800/30 overflow-hidden"
+      className="rounded-xl border border-gray-200 dark:border-slate-800 bg-white/70 dark:bg-slate-900/70 overflow-hidden"
     >
       <button className="w-full flex items-start gap-3 p-3 text-left" onClick={() => setOpen(!open)}>
         <div
@@ -135,15 +136,15 @@ function SerendipityCard({ connection, index }) {
             background: `conic-gradient(from 0deg, #8b5cf6 ${score * 3.6}deg, #1e293b ${score * 3.6}deg)`,
           }}
         >
-          <div className="w-5 h-5 bg-slate-900 rounded flex items-center justify-center text-violet-400 text-xs font-bold">
+          <div className="w-5 h-5 bg-white rounded flex items-center justify-center text-violet-400 text-xs font-bold">
             {score}
           </div>
         </div>
         <div className="flex-1 min-w-0">
           <p className="text-xs font-semibold text-violet-300 mb-0.5">{connection.field}</p>
-          <p className="text-xs text-slate-400 line-clamp-2">{connection.insight}</p>
+          <p className="text-xs text-gray-500 dark:text-slate-400 line-clamp-2">{connection.insight}</p>
         </div>
-        {open ? <ChevronUp size={14} className="text-slate-500 mt-1 shrink-0" /> : <ChevronDown size={14} className="text-slate-500 mt-1 shrink-0" />}
+        {open ? <ChevronUp size={14} className="text-gray-400 dark:text-slate-500 mt-1 shrink-0" /> : <ChevronDown size={14} className="text-gray-400 dark:text-slate-500 mt-1 shrink-0" />}
       </button>
       <AnimatePresence>
         {open && (
@@ -153,8 +154,8 @@ function SerendipityCard({ connection, index }) {
             exit={{ height: 0 }}
             className="overflow-hidden"
           >
-            <div className="px-3 pb-3 border-t border-slate-700/30 pt-2">
-              <p className="text-xs text-slate-300 mb-2">{connection.insight}</p>
+            <div className="px-3 pb-3 border-t border-gray-200 dark:border-slate-800 pt-2">
+              <p className="text-xs text-gray-700 dark:text-slate-300 mb-2">{connection.insight}</p>
               {connection.how_to_apply && (
                 <div className="flex gap-2 p-2 rounded-lg bg-violet-500/10 border border-violet-500/20">
                   <Lightbulb size={12} className="text-violet-400 mt-0.5 shrink-0" />
@@ -295,11 +296,57 @@ export default function Dashboard() {
 
   return (
     <div className="p-6 max-w-7xl mx-auto space-y-6">
+
+      {/* ── CogniFlow AI Chat Banner ─────────────────────────────────── */}
+      <Link to={createPageUrl('ResearchChat')}>
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="relative overflow-hidden rounded-2xl border border-violet-200 dark:border-violet-500/20 bg-gradient-to-r from-violet-50 via-purple-50 to-fuchsia-50 dark:from-violet-950/40 dark:via-purple-950/30 dark:to-fuchsia-950/40 p-4 flex items-center gap-5 cursor-pointer group hover:shadow-lg hover:shadow-violet-200/50 dark:hover:shadow-violet-900/30 transition-all duration-300"
+        >
+          {/* Ambient glow blobs */}
+          <div className="absolute -top-6 -left-6 w-32 h-32 bg-violet-400/10 rounded-full blur-2xl pointer-events-none" />
+          <div className="absolute -bottom-6 right-24 w-40 h-40 bg-fuchsia-400/10 rounded-full blur-2xl pointer-events-none" />
+
+          {/* Avatar */}
+          <div className="shrink-0 w-14 h-14 rounded-full bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center shadow-lg shadow-violet-500/30 group-hover:scale-105 transition-transform duration-300">
+            <Brain size={26} className="text-white" />
+          </div>
+
+          {/* Text */}
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2 mb-1">
+              <h2 className="text-base font-bold text-gray-900 dark:text-white">CogniFlow AI</h2>
+              <span className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 text-xs font-semibold">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                ONLINE
+              </span>
+            </div>
+            <p className="text-sm text-gray-600 dark:text-slate-400 leading-snug">
+              Your personal AI research assistant — ask about your documents, papers, or any research question.
+            </p>
+            <span className="inline-flex items-center gap-1 mt-2 px-3 py-1 rounded-full border border-violet-300 dark:border-violet-500/40 text-violet-700 dark:text-violet-300 text-xs font-medium bg-white/60 dark:bg-violet-500/10">
+              <Sparkles size={11} />
+              RAG-powered — grounded in your research
+            </span>
+          </div>
+
+          {/* CTA button */}
+          <div className="shrink-0 hidden sm:block">
+            <div className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white dark:bg-slate-800 border border-violet-200 dark:border-violet-500/30 text-gray-900 dark:text-white font-semibold text-sm shadow-sm group-hover:bg-violet-600 group-hover:text-white group-hover:border-violet-600 dark:group-hover:bg-violet-600 transition-all duration-200 whitespace-nowrap">
+              Ask CogniFlow
+              <ArrowRight size={15} className="group-hover:translate-x-0.5 transition-transform" />
+            </div>
+          </div>
+        </motion.div>
+      </Link>
+
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-white tracking-tight">Research Intelligence</h1>
-          <p className="text-slate-400 mt-1 text-sm">Your living research command centre</p>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white tracking-tight">Research Intelligence</h1>
+          <p className="text-gray-500 dark:text-slate-400 mt-1 text-sm">Your living research command centre</p>
         </div>
         <div className="flex gap-2">
           <Link to={createPageUrl('ResearchCouncil')}>
@@ -309,7 +356,7 @@ export default function Dashboard() {
             </Button>
           </Link>
           <Link to={createPageUrl('Projects')}>
-            <Button variant="outline" className="border-slate-700 hover:bg-slate-800 gap-2">
+            <Button variant="outline" className="border-gray-300 dark:border-slate-700 hover:bg-gray-100 dark:hover:bg-slate-800 gap-2">
               <BookOpen size={15} />
               Projects
             </Button>
@@ -328,15 +375,15 @@ export default function Dashboard() {
                   <Badge className="bg-violet-500/20 text-violet-300 border-violet-500/30 mb-3 text-xs">
                     Active Project
                   </Badge>
-                  <h2 className="text-xl font-semibold text-white leading-tight">{currentProject.title}</h2>
-                  <p className="text-slate-400 mt-2 text-sm line-clamp-2">{currentProject.abstract}</p>
+                  <h2 className="text-xl font-semibold text-gray-900 dark:text-white leading-tight">{currentProject.title}</h2>
+                  <p className="text-gray-500 dark:text-slate-400 mt-2 text-sm line-clamp-2">{currentProject.abstract}</p>
 
                   {/* Living Narrative */}
                   {(narrative || narrativeLoading) && (
                     <motion.div
                       initial={{ opacity: 0, y: 8 }}
                       animate={{ opacity: 1, y: 0 }}
-                      className="mt-4 p-3 rounded-xl bg-slate-900/50 border border-violet-500/20"
+                      className="mt-4 p-3 rounded-xl bg-white/50 dark:bg-slate-900/50 border border-violet-500/20"
                     >
                       <div className="flex items-center gap-1.5 mb-2">
                         <Sparkles size={12} className="text-violet-400" />
@@ -345,12 +392,12 @@ export default function Dashboard() {
                       {narrativeLoading ? (
                         <div className="space-y-1.5">
                           {[95, 80, 60].map((w, i) => (
-                            <div key={i} className="h-2 rounded bg-slate-700 animate-pulse" style={{ width: `${w}%` }} />
+                            <div key={i} className="h-2 rounded bg-gray-200 dark:bg-slate-700 animate-pulse" style={{ width: `${w}%` }} />
                           ))}
                         </div>
                       ) : (
                         <>
-                          <p className="text-xs text-slate-300 leading-relaxed italic">"{narrative?.narrative}"</p>
+                          <p className="text-xs text-gray-700 dark:text-slate-300 leading-relaxed italic">"{narrative?.narrative}"</p>
                           {narrative?.research_direction && (
                             <p className="text-xs text-violet-400 mt-2 font-medium">→ {narrative.research_direction}</p>
                           )}
@@ -360,11 +407,11 @@ export default function Dashboard() {
                   )}
 
                   <div className="flex items-center gap-4 mt-4">
-                    <div className="flex items-center gap-2 text-sm text-slate-300">
+                    <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-slate-300">
                       <Target size={14} />
                       <span className="capitalize">{currentProject.stage?.replace(/_/g, ' ')}</span>
                     </div>
-                    <div className="flex items-center gap-2 text-sm text-slate-300">
+                    <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-slate-300">
                       <Activity size={14} />
                       <span>{currentProject.progress || 0}% Complete</span>
                     </div>
@@ -372,20 +419,20 @@ export default function Dashboard() {
                 </div>
                 <div className="text-right ml-4 shrink-0">
                   <div className="text-4xl font-black text-white">{overallHealth}</div>
-                  <div className="text-xs text-slate-400">Health Score</div>
+                  <div className="text-xs text-gray-500 dark:text-slate-400">Health Score</div>
                 </div>
               </div>
               <Progress value={currentProject.progress || 0} className="mt-4 h-1.5" />
             </CardContent>
           </Card>
         ) : (
-          <Card className="lg:col-span-2 bg-slate-900/50 border-slate-800 border-dashed">
+          <Card className="lg:col-span-2 bg-white/50 dark:bg-slate-900/50 border-gray-200 dark:border-slate-800 border-dashed">
             <CardContent className="p-6 flex flex-col items-center justify-center text-center py-12">
               <BookOpen size={36} className="text-slate-700 mb-3" />
-              <h3 className="font-semibold text-slate-400">No active project</h3>
-              <p className="text-sm text-slate-600 mt-1 mb-4">Create a project to unlock all features</p>
+              <h3 className="font-semibold text-gray-500 dark:text-slate-400">No active project</h3>
+              <p className="text-sm text-gray-400 dark:text-slate-500 mt-1 mb-4">Create a project to unlock all features</p>
               <Link to={createPageUrl('Projects')}>
-                <Button size="sm" variant="outline" className="border-slate-700 hover:bg-slate-800">
+                <Button size="sm" variant="outline" className="border-gray-300 dark:border-slate-700 hover:bg-gray-100 dark:hover:bg-slate-800">
                   Create Project
                 </Button>
               </Link>
@@ -394,7 +441,7 @@ export default function Dashboard() {
         )}
 
         {/* Momentum Card */}
-        <Card className="bg-slate-900/50 border-slate-800">
+        <Card className="bg-white/50 dark:bg-slate-900/50 border-gray-200 dark:border-slate-800">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm flex items-center gap-2">
               <Zap size={15} className="text-amber-400" />
@@ -411,11 +458,11 @@ export default function Dashboard() {
                 />
                 {/* Breakthrough proximity */}
                 <div className="w-full space-y-1.5">
-                  <div className="flex justify-between text-xs text-slate-500">
+                  <div className="flex justify-between text-xs text-gray-400 dark:text-slate-500">
                     <span>Breakthrough proximity</span>
                     <span className="text-violet-400">{momentum.breakthrough_proximity}%</span>
                   </div>
-                  <div className="h-1.5 bg-slate-800 rounded-full overflow-hidden">
+                  <div className="h-1.5 bg-gray-100 dark:bg-slate-800 rounded-full overflow-hidden">
                     <motion.div
                       initial={{ width: 0 }}
                       animate={{ width: `${momentum.breakthrough_proximity}%` }}
@@ -427,7 +474,7 @@ export default function Dashboard() {
                 {/* Insights */}
                 <div className="w-full space-y-1.5">
                   {(momentum.insights || []).map((insight, i) => (
-                    <div key={i} className="flex items-start gap-2 text-xs text-slate-400">
+                    <div key={i} className="flex items-start gap-2 text-xs text-gray-500 dark:text-slate-400">
                       <div className="w-1 h-1 rounded-full bg-emerald-400 mt-1.5 shrink-0" />
                       <span>{insight}</span>
                     </div>
@@ -436,14 +483,14 @@ export default function Dashboard() {
                 {momentum.next_milestone && (
                   <div className="w-full p-2.5 rounded-lg bg-amber-500/10 border border-amber-500/20 text-xs">
                     <span className="text-amber-400 font-medium">Next: </span>
-                    <span className="text-slate-300">{momentum.next_milestone}</span>
+                    <span className="text-gray-700 dark:text-slate-300">{momentum.next_milestone}</span>
                   </div>
                 )}
               </>
             ) : (
               <div className="flex flex-col items-center gap-2 py-6">
-                <div className="w-16 h-16 rounded-full border-4 border-slate-800 border-t-amber-500 animate-spin" />
-                <p className="text-xs text-slate-600">Calculating momentum…</p>
+                <div className="w-16 h-16 rounded-full border-4 border-gray-200 dark:border-slate-700 border-t-amber-500 animate-spin" />
+                <p className="text-xs text-gray-400 dark:text-slate-500">Calculating momentum…</p>
               </div>
             )}
           </CardContent>
@@ -465,7 +512,7 @@ export default function Dashboard() {
       {/* Serendipity + Quick Actions Row */}
       <div className="grid lg:grid-cols-2 gap-6">
         {/* Serendipity Engine */}
-        <Card className="bg-slate-900/50 border-slate-800">
+        <Card className="bg-white/50 dark:bg-slate-900/50 border-gray-200 dark:border-slate-800">
           <CardHeader className="pb-3">
             <div className="flex items-center justify-between">
               <CardTitle className="text-base flex items-center gap-2">
@@ -475,24 +522,24 @@ export default function Dashboard() {
               <Button
                 variant="ghost"
                 size="icon"
-                className="w-7 h-7 text-slate-500 hover:text-white"
+                className="w-7 h-7 text-gray-400 dark:text-slate-500 hover:text-gray-900 dark:hover:text-white"
                 onClick={() => refetchSerendipity()}
                 disabled={serendipityLoading}
               >
                 <RefreshCw size={13} className={serendipityLoading ? 'animate-spin' : ''} />
               </Button>
             </div>
-            <p className="text-xs text-slate-500 mt-0.5">Unexpected cross-disciplinary connections to your research</p>
+            <p className="text-xs text-gray-400 dark:text-slate-500 mt-0.5">Unexpected cross-disciplinary connections to your research</p>
           </CardHeader>
           <CardContent className="space-y-2">
             {!currentProject ? (
-              <div className="text-center py-6 text-slate-600 text-xs">
+              <div className="text-center py-6 text-gray-400 dark:text-slate-500 text-xs">
                 Create a project to unlock serendipitous insights
               </div>
             ) : serendipityLoading ? (
               <div className="space-y-2">
                 {[1, 2, 3].map((i) => (
-                  <div key={i} className="h-14 rounded-xl bg-slate-800/40 animate-pulse" />
+                  <div key={i} className="h-14 rounded-xl bg-gray-100/70 dark:bg-slate-800/70 animate-pulse" />
                 ))}
               </div>
             ) : serendipity?.connections ? (
@@ -503,12 +550,12 @@ export default function Dashboard() {
                 {serendipity.meta_insight && (
                   <div className="flex gap-2 p-3 rounded-xl bg-violet-500/8 border border-violet-500/20 mt-2">
                     <Quote size={12} className="text-violet-400 mt-0.5 shrink-0" />
-                    <p className="text-xs text-slate-300 italic leading-relaxed">{serendipity.meta_insight}</p>
+                    <p className="text-xs text-gray-700 dark:text-slate-300 italic leading-relaxed">{serendipity.meta_insight}</p>
                   </div>
                 )}
               </>
             ) : (
-              <div className="text-center py-6 text-slate-600 text-xs">No serendipitous connections yet</div>
+              <div className="text-center py-6 text-gray-400 dark:text-slate-500 text-xs">No serendipitous connections yet</div>
             )}
           </CardContent>
         </Card>
@@ -516,7 +563,7 @@ export default function Dashboard() {
         {/* Quick Actions + Gaps */}
         <div className="space-y-4">
           {/* Quick Actions */}
-          <Card className="bg-slate-900/50 border-slate-800">
+          <Card className="bg-white/50 dark:bg-slate-900/50 border-gray-200 dark:border-slate-800">
             <CardHeader className="pb-3">
               <CardTitle className="text-base flex items-center gap-2">
                 <Lightbulb size={16} className="text-emerald-400" />
@@ -541,7 +588,7 @@ export default function Dashboard() {
 
           {/* Research Gaps */}
           {gaps.length > 0 && (
-            <Card className="bg-slate-900/50 border-slate-800">
+            <Card className="bg-white/50 dark:bg-slate-900/50 border-gray-200 dark:border-slate-800">
               <CardHeader className="pb-2">
                 <CardTitle className="text-sm flex items-center gap-2">
                   <AlertTriangle size={15} className="text-amber-400" />
@@ -550,20 +597,20 @@ export default function Dashboard() {
               </CardHeader>
               <CardContent className="space-y-2">
                 {gaps.slice(0, 3).map((gap) => (
-                  <div key={gap.id} className="flex items-start gap-2 p-2.5 rounded-lg bg-slate-800/50 border border-slate-700/30">
+                  <div key={gap.id} className="flex items-start gap-2 p-2.5 rounded-lg bg-gray-50 dark:bg-slate-950 border border-gray-200 dark:border-slate-800">
                     <div className={cn(
                       'w-2 h-2 rounded-full mt-1.5 shrink-0',
                       gap.significance === 'critical' ? 'bg-red-400' :
                       gap.significance === 'high'     ? 'bg-amber-400' : 'bg-slate-400',
                     )} />
                     <div>
-                      <p className="text-xs font-medium text-white line-clamp-1">{gap.title}</p>
-                      <p className="text-xs text-slate-500 capitalize">{gap.gap_type}</p>
+                      <p className="text-xs font-medium text-gray-900 dark:text-white line-clamp-1">{gap.title}</p>
+                      <p className="text-xs text-gray-400 dark:text-slate-500 capitalize">{gap.gap_type}</p>
                     </div>
                   </div>
                 ))}
                 <Link to={createPageUrl('GapAnalyzer')}>
-                  <Button variant="ghost" size="sm" className="w-full text-slate-500 hover:text-white text-xs mt-1">
+                  <Button variant="ghost" size="sm" className="w-full text-gray-400 dark:text-slate-500 hover:text-gray-900 dark:hover:text-white text-xs mt-1">
                     View all gaps <ArrowRight size={12} className="ml-1" />
                   </Button>
                 </Link>
@@ -573,16 +620,109 @@ export default function Dashboard() {
         </div>
       </div>
 
+      {/* System Intelligence: Retrieval Metrics + Global Saliency */}
+      <div className="grid lg:grid-cols-2 gap-6">
+        {/* Retrieval Performance */}
+        <Card className="bg-white/50 dark:bg-slate-900/50 border-gray-200 dark:border-slate-800">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-base flex items-center gap-2">
+              <TrendingUp size={16} className="text-violet-400" />
+              Retrieval Performance
+            </CardTitle>
+            <p className="text-xs text-gray-400 dark:text-slate-500 mt-0.5">Dense RAG vs. lexical baselines (K=5, academic corpus)</p>
+          </CardHeader>
+          <CardContent className="p-0 pb-3">
+            <table className="w-full text-xs">
+              <thead>
+                <tr className="border-b border-gray-100 dark:border-slate-800">
+                  <th className="px-4 py-2 text-left text-gray-400 dark:text-slate-500 font-medium">Model</th>
+                  <th className="px-3 py-2 text-center text-gray-400 dark:text-slate-500 font-medium">P@5</th>
+                  <th className="px-3 py-2 text-center text-gray-400 dark:text-slate-500 font-medium">R@5</th>
+                  <th className="px-3 py-2 text-center text-gray-400 dark:text-slate-500 font-medium">MRR</th>
+                </tr>
+              </thead>
+              <tbody>
+                {[
+                  { name: 'TF-IDF + Cosine', p: '0.62', r: '0.58', mrr: '0.66', top: false },
+                  { name: 'DPR',             p: '0.76', r: '0.73', mrr: '0.79', top: false },
+                  { name: 'SBERT Dense',     p: '0.81', r: '0.78', mrr: '0.84', top: false },
+                  { name: 'CogniFlow (RAG)', p: '0.86', r: '0.83', mrr: '0.89', top: true  },
+                ].map((row) => (
+                  <tr
+                    key={row.name}
+                    className={cn(
+                      'border-b border-gray-50 dark:border-slate-800 last:border-0',
+                      row.top ? 'bg-violet-50 dark:bg-violet-950/30 font-semibold' : '',
+                    )}
+                  >
+                    <td className="px-4 py-2 text-gray-900 dark:text-white flex items-center gap-1.5">
+                      {row.name}
+                      {row.top && (
+                        <span className="text-xs px-1.5 py-0.5 rounded-full bg-violet-500 text-white font-normal leading-none">Best</span>
+                      )}
+                    </td>
+                    <td className={cn('px-3 py-2 text-center', row.top ? 'text-violet-700 dark:text-violet-400' : 'text-gray-600 dark:text-slate-400')}>{row.p}</td>
+                    <td className={cn('px-3 py-2 text-center', row.top ? 'text-violet-700 dark:text-violet-400' : 'text-gray-600 dark:text-slate-400')}>{row.r}</td>
+                    <td className={cn('px-3 py-2 text-center', row.top ? 'text-violet-700 dark:text-violet-400' : 'text-gray-600 dark:text-slate-400')}>{row.mrr}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </CardContent>
+        </Card>
+
+        {/* Global Feature Saliency — Figure 2 from paper */}
+        <Card className="bg-white/50 dark:bg-slate-900/50 border-gray-200 dark:border-slate-800">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-base flex items-center gap-2">
+              <Activity size={16} className="text-emerald-400" />
+              Global Feature Saliency
+            </CardTitle>
+            <p className="text-xs text-gray-400 dark:text-slate-500 mt-0.5">Mean section importance in relevance attribution (gradient-based)</p>
+          </CardHeader>
+          <CardContent className="space-y-2.5">
+            {[
+              { section: 'Abstract',       weight: 0.42, color: 'from-violet-500 to-purple-600' },
+              { section: 'Method',         weight: 0.31, color: 'from-violet-400 to-purple-500' },
+              { section: 'Conclusion',     weight: 0.24, color: 'from-indigo-400 to-violet-500' },
+              { section: 'Results',        weight: 0.18, color: 'from-blue-400 to-indigo-500' },
+              { section: 'Introduction',   weight: 0.14, color: 'from-cyan-400 to-blue-500' },
+              { section: 'Discussion',     weight: 0.12, color: 'from-teal-400 to-cyan-500' },
+              { section: 'Related Work',   weight: 0.09, color: 'from-emerald-400 to-teal-500' },
+              { section: 'Limitations',    weight: 0.07, color: 'from-slate-400 to-gray-500' },
+              { section: 'Background',     weight: 0.05, color: 'from-gray-400 to-slate-500' },
+              { section: 'Literature Review', weight: 0.04, color: 'from-gray-300 to-gray-400' },
+            ].map((row) => (
+              <div key={row.section} className="flex items-center gap-2">
+                <span className="text-xs text-gray-500 dark:text-slate-400 w-28 shrink-0">{row.section}</span>
+                <div className="flex-1 h-4 bg-gray-100 dark:bg-slate-800 rounded-sm overflow-hidden">
+                  <motion.div
+                    initial={{ width: 0 }}
+                    animate={{ width: `${(row.weight / 0.42) * 100}%` }}
+                    transition={{ duration: 0.8, ease: 'easeOut', delay: 0.05 }}
+                    className={`h-full bg-gradient-to-r ${row.color} rounded-sm`}
+                  />
+                </div>
+                <span className="text-xs font-mono text-gray-500 dark:text-slate-400 w-8 text-right">{row.weight}</span>
+              </div>
+            ))}
+            <p className="text-xs text-gray-400 dark:text-slate-500 pt-1 border-t border-gray-100 dark:border-slate-800">
+              Abstract &amp; Method sections drive 73% of attribution weight
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+
       {/* Recent Activity */}
-      <Card className="bg-slate-900/50 border-slate-800">
+      <Card className="bg-white/50 dark:bg-slate-900/50 border-gray-200 dark:border-slate-800">
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between">
             <CardTitle className="text-base flex items-center gap-2">
-              <Clock size={16} className="text-slate-400" />
+              <Clock size={16} className="text-gray-500 dark:text-slate-400" />
               Research Timeline
             </CardTitle>
             <Link to={createPageUrl('Memory')}>
-              <Button variant="ghost" size="sm" className="text-slate-500 hover:text-white text-xs gap-1">
+              <Button variant="ghost" size="sm" className="text-gray-400 dark:text-slate-500 hover:text-gray-900 dark:hover:text-white text-xs gap-1">
                 View all <ArrowRight size={12} />
               </Button>
             </Link>
@@ -590,7 +730,7 @@ export default function Dashboard() {
         </CardHeader>
         <CardContent>
           {documents.length === 0 && conversations.length === 0 && gaps.length === 0 ? (
-            <div className="text-center py-8 text-slate-600">
+            <div className="text-center py-8 text-gray-400 dark:text-slate-500">
               <Clock size={28} className="mx-auto mb-2 opacity-40" />
               <p className="text-sm">Your research journey starts here</p>
             </div>
@@ -631,12 +771,12 @@ function HealthMetricCard({ label, value, icon: Icon, color }) {
       <CardContent className="p-4">
         <div className="flex items-center justify-between mb-3">
           <Icon size={17} className={s.text} />
-          <span className="text-2xl font-black text-white">
+          <span className="text-2xl font-black text-gray-900 dark:text-white">
             <AnimatedNumber value={value} />
           </span>
         </div>
-        <p className="text-xs text-slate-400 mb-2">{label}</p>
-        <div className="h-1 bg-slate-800 rounded-full overflow-hidden">
+        <p className="text-xs text-gray-500 dark:text-slate-400 mb-2">{label}</p>
+        <div className="h-1 bg-gray-100 dark:bg-slate-800 rounded-full overflow-hidden">
           <motion.div
             initial={{ width: 0 }}
             animate={{ width: `${value}%` }}
@@ -661,15 +801,15 @@ function ActionCard({ title, description, icon: Icon, color }) {
   const s = styles[color] || styles.violet;
 
   return (
-    <div className={`group flex items-center gap-3 p-3 rounded-xl bg-slate-800/30 border border-slate-700/40 transition-all cursor-pointer ${s.hover}`}>
-      <div className={`p-2 rounded-lg bg-slate-900/80 ${s.icon}`}>
+    <div className={`group flex items-center gap-3 p-3 rounded-xl bg-white/70 dark:bg-slate-900/70 border border-gray-200 dark:border-slate-800 transition-all cursor-pointer ${s.hover}`}>
+      <div className={`p-2 rounded-lg bg-white/80 dark:bg-slate-800/80 ${s.icon}`}>
         <Icon size={17} />
       </div>
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-medium text-white">{title}</p>
-        <p className="text-xs text-slate-500">{description}</p>
+        <p className="text-sm font-medium text-gray-900">{title}</p>
+        <p className="text-xs text-gray-400">{description}</p>
       </div>
-      <ArrowRight size={15} className="text-slate-600 group-hover:text-white transition-colors shrink-0" />
+      <ArrowRight size={15} className="text-gray-400 group-hover:text-gray-900 transition-colors shrink-0" />
     </div>
   );
 }
@@ -680,11 +820,11 @@ function TimelineItem({ time, event, type, isLast }) {
     <div className="flex items-start gap-3 group">
       <div className="flex flex-col items-center shrink-0">
         <div className={`w-2.5 h-2.5 rounded-full mt-1 ${dots[type] || 'bg-slate-500'} ring-2 ring-slate-950`} />
-        {!isLast && <div className="w-px flex-1 bg-slate-800 mt-1 mb-0" style={{ minHeight: 24 }} />}
+        {!isLast && <div className="w-px flex-1 bg-gray-100 mt-1 mb-0" style={{ minHeight: 24 }} />}
       </div>
       <div className={`flex-1 pb-4 ${isLast ? '' : ''}`}>
-        <p className="text-sm text-slate-300 group-hover:text-white transition-colors">{event}</p>
-        <p className="text-xs text-slate-600 mt-0.5">{new Date(time).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}</p>
+        <p className="text-sm text-gray-700 group-hover:text-gray-900 transition-colors">{event}</p>
+        <p className="text-xs text-gray-400 mt-0.5">{new Date(time).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}</p>
       </div>
     </div>
   );

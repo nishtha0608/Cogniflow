@@ -104,8 +104,8 @@ export default function Analytics() {
     <div className="p-6 max-w-7xl mx-auto space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-white">Research Analytics</h1>
-        <p className="text-slate-400 mt-1">Track your research progress and productivity</p>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Research Analytics</h1>
+        <p className="text-gray-500 dark:text-slate-400 mt-1">Track your research progress and productivity</p>
       </div>
 
       {/* Key Metrics */}
@@ -139,7 +139,7 @@ export default function Analytics() {
       {/* Charts Row 1 */}
       <div className="grid lg:grid-cols-2 gap-6">
         {/* Activity Over Time */}
-        <Card className="bg-slate-900/50 border-slate-800">
+        <Card className="bg-white/50 dark:bg-slate-900/50 border-gray-200 dark:border-slate-800">
           <CardHeader>
             <CardTitle className="text-base flex items-center gap-2">
               <TrendingUp size={16} className="text-blue-400" />
@@ -181,7 +181,7 @@ export default function Analytics() {
         </Card>
 
         {/* Gap Distribution */}
-        <Card className="bg-slate-900/50 border-slate-800">
+        <Card className="bg-white/50 dark:bg-slate-900/50 border-gray-200 dark:border-slate-800">
           <CardHeader>
             <CardTitle className="text-base flex items-center gap-2">
               <Target size={16} className="text-amber-400" />
@@ -218,7 +218,7 @@ export default function Analytics() {
                   </PieChart>
                 </ResponsiveContainer>
               ) : (
-                <p className="text-slate-500">No gaps identified yet</p>
+                <p className="text-gray-400 dark:text-slate-500">No gaps identified yet</p>
               )}
             </div>
           </CardContent>
@@ -228,7 +228,7 @@ export default function Analytics() {
       {/* Charts Row 2 */}
       <div className="grid lg:grid-cols-2 gap-6">
         {/* Project Progress */}
-        <Card className="bg-slate-900/50 border-slate-800">
+        <Card className="bg-white/50 dark:bg-slate-900/50 border-gray-200 dark:border-slate-800">
           <CardHeader>
             <CardTitle className="text-base flex items-center gap-2">
               <BarChart3 size={16} className="text-violet-400" />
@@ -255,7 +255,7 @@ export default function Analytics() {
                 </ResponsiveContainer>
               ) : (
                 <div className="h-full flex items-center justify-center">
-                  <p className="text-slate-500">No projects yet</p>
+                  <p className="text-gray-400 dark:text-slate-500">No projects yet</p>
                 </div>
               )}
             </div>
@@ -263,7 +263,7 @@ export default function Analytics() {
         </Card>
 
         {/* Document Types */}
-        <Card className="bg-slate-900/50 border-slate-800">
+        <Card className="bg-white/50 dark:bg-slate-900/50 border-gray-200 dark:border-slate-800">
           <CardHeader>
             <CardTitle className="text-base flex items-center gap-2">
               <FileText size={16} className="text-emerald-400" />
@@ -290,7 +290,7 @@ export default function Analytics() {
                 </ResponsiveContainer>
               ) : (
                 <div className="h-full flex items-center justify-center">
-                  <p className="text-slate-500">No documents yet</p>
+                  <p className="text-gray-400 dark:text-slate-500">No documents yet</p>
                 </div>
               )}
             </div>
@@ -299,23 +299,23 @@ export default function Analytics() {
       </div>
 
       {/* Writing Stats */}
-      <Card className="bg-slate-900/50 border-slate-800">
+      <Card className="bg-white/50 dark:bg-slate-900/50 border-gray-200 dark:border-slate-800">
         <CardHeader>
           <CardTitle className="text-base">Writing Statistics</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid md:grid-cols-3 gap-6">
             <div>
-              <p className="text-sm text-slate-400 mb-1">Average Words per Document</p>
-              <p className="text-3xl font-bold text-white">{avgWordsPerDoc.toLocaleString()}</p>
+              <p className="text-sm text-gray-500 dark:text-slate-400 mb-1">Average Words per Document</p>
+              <p className="text-3xl font-bold text-gray-900 dark:text-white">{avgWordsPerDoc.toLocaleString()}</p>
             </div>
             <div>
-              <p className="text-sm text-slate-400 mb-1">Total Writing Sessions</p>
-              <p className="text-3xl font-bold text-white">{documents.filter(d => d.type === 'draft').length}</p>
+              <p className="text-sm text-gray-500 dark:text-slate-400 mb-1">Total Writing Sessions</p>
+              <p className="text-3xl font-bold text-gray-900 dark:text-white">{documents.filter(d => d.type === 'draft').length}</p>
             </div>
             <div>
-              <p className="text-sm text-slate-400 mb-1">Literature Reviewed</p>
-              <p className="text-3xl font-bold text-white">{documents.filter(d => d.type === 'literature').length}</p>
+              <p className="text-sm text-gray-500 dark:text-slate-400 mb-1">Literature Reviewed</p>
+              <p className="text-3xl font-bold text-gray-900 dark:text-white">{documents.filter(d => d.type === 'literature').length}</p>
             </div>
           </div>
         </CardContent>
@@ -345,8 +345,8 @@ function MetricCard({ icon: Icon, label, value, color }) {
         <div className="flex items-center gap-3">
           <Icon size={20} className={iconColors[color]} />
           <div>
-            <p className="text-2xl font-bold text-white">{value}</p>
-            <p className="text-sm text-slate-400">{label}</p>
+            <p className="text-2xl font-bold text-gray-900 dark:text-white">{value}</p>
+            <p className="text-sm text-gray-500 dark:text-slate-400">{label}</p>
           </div>
         </div>
       </CardContent>
