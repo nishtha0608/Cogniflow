@@ -47,10 +47,6 @@
  *
  * The mainPage value must match a key in the PAGES object exactly.
  */
-import AgentDebate from './pages/AgentDebate';
-import Analytics from './pages/Analytics';
-import AutoPilot from './pages/AutoPilot';
-import BreakthroughOracle from './pages/BreakthroughOracle';
 import Dashboard from './pages/Dashboard';
 import Documents from './pages/Documents';
 import GapAnalyzer from './pages/GapAnalyzer';
@@ -59,7 +55,6 @@ import Memory from './pages/Memory';
 import Projects from './pages/Projects';
 import ResearchChat from './pages/ResearchChat';
 import ResearchCouncil from './pages/ResearchCouncil';
-import ResearchGenome from './pages/ResearchGenome';
 import VivaSimulator from './pages/VivaSimulator';
 import Writing from './pages/Writing';
 import PaperSearch from './pages/PaperSearch';
@@ -67,10 +62,6 @@ import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
-    "AgentDebate": AgentDebate,
-    "Analytics": Analytics,
-    "AutoPilot": AutoPilot,
-    "BreakthroughOracle": BreakthroughOracle,
     "Dashboard": Dashboard,
     "Documents": Documents,
     "GapAnalyzer": GapAnalyzer,
@@ -79,7 +70,6 @@ export const PAGES = {
     "Projects": Projects,
     "ResearchChat": ResearchChat,
     "ResearchCouncil": ResearchCouncil,
-    "ResearchGenome": ResearchGenome,
     "VivaSimulator": VivaSimulator,
     "Writing": Writing,
     "PaperSearch": PaperSearch,
