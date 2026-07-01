@@ -30,6 +30,7 @@ import {
   MessageCircle,
   CreditCard,
   UserCircle,
+  Presentation,
 } from 'lucide-react';
 import SupportChatbot from '@/components/SupportChatbot';
 import { cn } from '@/lib/utils';
@@ -53,6 +54,7 @@ const EXTENSIONS = [
   { id: 'geo',       name: 'Geo Research',    icon: MapPin,        page: 'GeoResearch',  color: 'from-teal-500 to-cyan-600',      accent: '#14b8a6' },
   { id: 'billing',   name: 'Subscription',    icon: CreditCard,    page: 'Billing',      color: 'from-amber-500 to-yellow-600',   accent: '#f59e0b' },
   { id: 'profile',   name: 'My Profile',      icon: UserCircle,    page: 'Profile',      color: 'from-blue-500 to-cyan-600',      accent: '#3b82f6' },
+  { id: 'ppt',       name: 'PPT Generator',   icon: Presentation,  page: 'PPTGenerator', color: 'from-violet-500 to-fuchsia-600', accent: '#a21caf' },
 ];
 
 

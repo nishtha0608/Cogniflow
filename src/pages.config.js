@@ -15,6 +15,7 @@ import Profile from './pages/Profile';
 import Billing from './pages/Billing';
 import GeoResearch from './pages/GeoResearch';
 import WhatsApp from './pages/WhatsApp';
+import PPTGenerator from './pages/PPTGenerator';
 import __Layout from './Layout.jsx';
 
 export const PAGES = {
@@ -35,6 +36,7 @@ export const PAGES = {
     "Billing": Billing,
     "GeoResearch": GeoResearch,
     "WhatsApp": WhatsApp,
+    "PPTGenerator": PPTGenerator,
 }
 
 export const pagesConfig = {
