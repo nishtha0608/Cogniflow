@@ -65,7 +65,7 @@ export default function Layout({ children, currentPageName }) {
   const [collapsed, setCollapsed] = useState(false);
   const { projects, activeProject, clearProject } = useActiveProject();
 
-  const currentMode = MODES.find((m) => m.page === currentPageName);
+  const currentMode = [...MODES, ...EXTENSIONS].find((m) => m.page === currentPageName);
   const activeAccent = currentMode?.accent || '#8b5cf6';
 
   const isProjectsHub = currentPageName === 'Projects';
