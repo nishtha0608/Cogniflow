@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Link, useSearchParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
-  Sparkles, Mail, Lock, User, Eye, EyeOff, Loader2, ArrowLeft,
+  Sparkles, Mail, Lock, User, Eye, EyeOff, Loader2, ArrowLeft, Phone,
 } from 'lucide-react';
 import { useAuth } from '@/lib/AuthContext';
+import { signInWithPhoneNumber, RecaptchaVerifier } from 'firebase/auth';
+import { auth } from '@/lib/firebase';
 
 // Google "G" icon as inline SVG (no extra dependency needed)
 function GoogleIcon({ size = 18 }) {
@@ -32,14 +34,19 @@ export default function Login() {
   const navigate         = useNavigate();
   const initialTab       = searchParams.get('tab') === 'register' ? 'register' : 'login';
 
-  const [activeTab,    setActiveTab]    = useState(initialTab);
-  const [email,        setEmail]        = useState('');
-  const [password,     setPassword]     = useState('');
-  const [fullName,     setFullName]     = useState('');
-  const [showPassword, setShowPassword] = useState(false);
-  const [isLoading,    setIsLoading]    = useState(false);
-  const [googleLoading,setGoogleLoading]= useState(false);
-  const [error,        setError]        = useState('');
+  const [activeTab,       setActiveTab]       = useState(initialTab);
+  const [email,           setEmail]           = useState('');
+  const [password,        setPassword]        = useState('');
+  const [fullName,        setFullName]        = useState('');
+  const [showPassword,    setShowPassword]    = useState(false);
+  const [isLoading,       setIsLoading]       = useState(false);
+  const [googleLoading,   setGoogleLoading]   = useState(false);
+  const [error,           setError]           = useState('');
+  const [phoneNumber,     setPhoneNumber]     = useState('');
+  const [otp,             setOtp]             = useState('');
+  const [otpSent,         setOtpSent]         = useState(false);
+  const [phoneLoading,    setPhoneLoading]    = useState(false);
+  const confirmationRef = useRef(null);
 
   const { login, register, loginWithGoogle } = useAuth();
 
@@ -49,9 +56,44 @@ export default function Login() {
     setFullName('');
     setError('');
     setShowPassword(false);
+    setPhoneNumber('');
+    setOtp('');
+    setOtpSent(false);
   };
 
   const switchTab = (tab) => { setActiveTab(tab); resetForm(); };
+
+  const handleSendOtp = async (e) => {
+    e.preventDefault();
+    setPhoneLoading(true);
+    setError('');
+    try {
+      if (!window.recaptchaVerifier) {
+        window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', { size: 'invisible' });
+      }
+      const result = await signInWithPhoneNumber(auth, phoneNumber, window.recaptchaVerifier);
+      confirmationRef.current = result;
+      setOtpSent(true);
+    } catch (err) {
+      setError(err.message || 'Failed to send OTP. Check your phone number and try again.');
+    } finally {
+      setPhoneLoading(false);
+    }
+  };
+
+  const handleVerifyOtp = async (e) => {
+    e.preventDefault();
+    setPhoneLoading(true);
+    setError('');
+    try {
+      await confirmationRef.current.confirm(otp);
+      navigate('/');
+    } catch (err) {
+      setError('Invalid OTP. Please try again.');
+    } finally {
+      setPhoneLoading(false);
+    }
+  };
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -156,11 +198,11 @@ export default function Login() {
 
           {/* Tabs */}
           <div className="flex gap-1 p-1 bg-gray-50 rounded-xl mb-6">
-            {[{ id: 'login', label: 'Sign In' }, { id: 'register', label: 'Create Account' }].map((tab) => (
+            {[{ id: 'login', label: 'Sign In' }, { id: 'register', label: 'Create Account' }, { id: 'phone', label: 'Phone OTP' }].map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => switchTab(tab.id)}
-                className={`flex-1 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
+                className={`flex-1 py-2 text-xs font-medium rounded-lg transition-all duration-200 ${
                   activeTab === tab.id
                     ? 'bg-white text-gray-900 shadow-sm'
                     : 'text-gray-500 hover:text-gray-800'
@@ -170,6 +212,9 @@ export default function Login() {
               </button>
             ))}
           </div>
+
+          {/* Hidden reCAPTCHA container */}
+          <div id="recaptcha-container" />
 
           {error && (
             <div className="mb-5 p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-sm">
@@ -296,6 +341,67 @@ export default function Login() {
                 Create Account
               </button>
             </form>
+          )}
+
+          {/* Phone OTP form */}
+          {activeTab === 'phone' && (
+            <div className="space-y-4">
+              {!otpSent ? (
+                <form onSubmit={handleSendOtp} className="space-y-4">
+                  <div>
+                    <label className="text-gray-700 text-sm mb-1.5 block">Phone Number</label>
+                    <div className="relative">
+                      <Phone size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
+                      <Input
+                        type="tel"
+                        value={phoneNumber}
+                        onChange={(e) => setPhoneNumber(e.target.value)}
+                        placeholder="+1 555 000 0000"
+                        className="pl-9"
+                        required
+                        autoFocus
+                      />
+                    </div>
+                    <p className="text-xs text-gray-400 mt-1">Include country code (e.g. +1 for US)</p>
+                  </div>
+                  <button
+                    type="submit"
+                    disabled={phoneLoading || !phoneNumber}
+                    className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-gradient-to-r from-violet-500 to-purple-600 hover:opacity-90 text-white font-semibold text-sm transition-all mt-2 disabled:opacity-50"
+                  >
+                    {phoneLoading && <Loader2 size={16} className="animate-spin" />}
+                    Send OTP
+                  </button>
+                </form>
+              ) : (
+                <form onSubmit={handleVerifyOtp} className="space-y-4">
+                  <div>
+                    <p className="text-sm text-gray-600 mb-3">OTP sent to <strong>{phoneNumber}</strong></p>
+                    <label className="text-gray-700 text-sm mb-1.5 block">Enter OTP</label>
+                    <Input
+                      type="text"
+                      value={otp}
+                      onChange={(e) => setOtp(e.target.value)}
+                      placeholder="6-digit code"
+                      maxLength={6}
+                      required
+                      autoFocus
+                    />
+                  </div>
+                  <button
+                    type="submit"
+                    disabled={phoneLoading || otp.length < 4}
+                    className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-gradient-to-r from-violet-500 to-purple-600 hover:opacity-90 text-white font-semibold text-sm transition-all disabled:opacity-50"
+                  >
+                    {phoneLoading && <Loader2 size={16} className="animate-spin" />}
+                    Verify OTP
+                  </button>
+                  <button type="button" onClick={() => setOtpSent(false)} className="w-full text-sm text-gray-400 hover:text-gray-600 transition-colors">
+                    Resend OTP
+                  </button>
+                </form>
+              )}
+            </div>
           )}
 
           <p className="text-center text-xs text-gray-400 mt-6">

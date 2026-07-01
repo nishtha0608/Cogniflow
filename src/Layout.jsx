@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from './utils';
 import { useAuth } from '@/lib/AuthContext';
@@ -24,11 +24,17 @@ import {
   ArrowLeft,
   Sun,
   Moon,
+  ScrollText,
+  Video,
+  MapPin,
+  MessageCircle,
+  CreditCard,
+  UserCircle,
 } from 'lucide-react';
+import SupportChatbot from '@/components/SupportChatbot';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
 
-// Eight modules as defined in the paper (Figure 4)
 const MODES = [
   { id: 'thinking',  name: 'Thinking Mode',      icon: Brain,         page: 'Dashboard',      color: 'from-violet-500 to-purple-600',  accent: '#8b5cf6' },
   { id: 'writing',   name: 'Writing Mode',        icon: PenTool,       page: 'Writing',        color: 'from-blue-500 to-cyan-600',      accent: '#3b82f6' },
@@ -38,6 +44,15 @@ const MODES = [
   { id: 'memory',    name: 'Research Memory',     icon: Clock,         page: 'Memory',         color: 'from-slate-500 to-gray-600',     accent: '#64748b' },
   { id: 'projects',  name: 'Project Dashboard',   icon: BookOpen,      page: 'Projects',       color: 'from-indigo-500 to-blue-600',    accent: '#6366f1' },
   { id: 'documents', name: 'Document Manager',    icon: FileText,      page: 'Documents',      color: 'from-fuchsia-500 to-violet-600', accent: '#d946ef' },
+];
+
+const EXTENSIONS = [
+  { id: 'patent',    name: 'Patent Search',   icon: ScrollText,    page: 'Patent',       color: 'from-orange-500 to-amber-600',   accent: '#f97316' },
+  { id: 'video',     name: 'Video Notes',     icon: Video,         page: 'VideoNotes',   color: 'from-red-500 to-rose-600',       accent: '#ef4444' },
+  { id: 'whatsapp',  name: 'WhatsApp',        icon: MessageCircle, page: 'WhatsApp',     color: 'from-green-500 to-emerald-600',  accent: '#22c55e' },
+  { id: 'geo',       name: 'Geo Research',    icon: MapPin,        page: 'GeoResearch',  color: 'from-teal-500 to-cyan-600',      accent: '#14b8a6' },
+  { id: 'billing',   name: 'Subscription',    icon: CreditCard,    page: 'Billing',      color: 'from-amber-500 to-yellow-600',   accent: '#f59e0b' },
+  { id: 'profile',   name: 'My Profile',      icon: UserCircle,    page: 'Profile',      color: 'from-blue-500 to-cyan-600',      accent: '#3b82f6' },
 ];
 
 
@@ -96,7 +111,7 @@ export default function Layout({ children, currentPageName }) {
     ];
     return {
       score,
-      label: labelMap.find(([t]) => score >= t)[1],
+      label: labelMap.find(([t]) => score >= Number(t))[1],
     };
   }, [user, documents, gaps, conversations, projects]);
 
@@ -253,59 +268,66 @@ export default function Layout({ children, currentPageName }) {
         )}
 
         <nav className="flex-1 p-3 space-y-0.5 overflow-y-auto">
-          {/* Research Modes */}
+          {/* Research Modules */}
           {!collapsed && (
             <p className="px-3 pt-2 pb-1 text-xs font-semibold text-gray-400 dark:text-slate-400 uppercase tracking-widest">
               Modules
             </p>
           )}
 
-          {MODES.map((mode) => {
+          {[...MODES, ...EXTENSIONS].map((mode, idx) => {
             const isActive = currentPageName === mode.page;
             const Icon = mode.icon;
+            const isFirstExtension = idx === MODES.length;
             return (
-              <Link
-                key={mode.id}
-                to={createPageUrl(mode.page)}
-                onClick={() => setMobileOpen(false)}
-                className={cn(
-                  'relative flex items-center gap-3 rounded-xl transition-all duration-200 group',
-                  collapsed ? 'justify-center px-0 py-2.5' : 'px-3 py-2.5',
-                  isActive
-                    ? 'text-gray-900 dark:text-white font-semibold'
-                    : 'text-gray-500 dark:text-slate-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100/70 dark:hover:bg-slate-800/60',
+              <React.Fragment key={mode.id}>
+                {isFirstExtension && !collapsed && (
+                  <p className="px-3 pt-4 pb-1 text-xs font-semibold text-gray-400 dark:text-slate-400 uppercase tracking-widest">
+                    Extensions
+                  </p>
                 )}
-                title={collapsed ? mode.name : undefined}
-              >
-                {isActive && (
-                  <motion.div
-                    layoutId="activeModeBg"
-                    className={`absolute inset-0 rounded-xl bg-gradient-to-r ${mode.color} opacity-20`}
-                    transition={{ type: 'spring', bounce: 0.2, duration: 0.4 }}
-                  />
+                {isFirstExtension && collapsed && (
+                  <div className="my-2 mx-2 h-px bg-gray-200 dark:bg-slate-700" />
                 )}
-                {isActive && (
-                  <div
-                    className={`absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-5 rounded-full bg-gradient-to-b ${mode.color}`}
-                  />
-                )}
-                <div
+                <Link
+                  to={createPageUrl(mode.page)}
+                  onClick={() => setMobileOpen(false)}
                   className={cn(
-                    'relative flex items-center justify-center w-7 h-7 rounded-lg transition-all',
+                    'relative flex items-center gap-3 rounded-xl transition-all duration-200 group',
+                    collapsed ? 'justify-center px-0 py-2.5' : 'px-3 py-2.5',
                     isActive
-                      ? `bg-gradient-to-br ${mode.color} shadow-lg`
-                      : 'bg-transparent group-hover:bg-gray-100 dark:group-hover:bg-slate-800',
+                      ? 'text-gray-900 dark:text-white font-semibold'
+                      : 'text-gray-500 dark:text-slate-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100/70 dark:hover:bg-slate-800/60',
                   )}
+                  title={collapsed ? mode.name : undefined}
                 >
-                  <Icon size={15} className={isActive ? 'text-white' : ''} />
-                </div>
-                {!collapsed && (
-                  <span className="relative text-sm font-medium">{mode.name}</span>
-                )}
-              </Link>
+                  {isActive && (
+                    <motion.div
+                      layoutId="activeModeBg"
+                      className={`absolute inset-0 rounded-xl bg-gradient-to-r ${mode.color} opacity-20`}
+                      transition={{ type: 'spring', bounce: 0.2, duration: 0.4 }}
+                    />
+                  )}
+                  {isActive && (
+                    <div className={`absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-5 rounded-full bg-gradient-to-b ${mode.color}`} />
+                  )}
+                  <div
+                    className={cn(
+                      'relative flex items-center justify-center w-7 h-7 rounded-lg transition-all',
+                      isActive
+                        ? `bg-gradient-to-br ${mode.color} shadow-lg`
+                        : 'bg-transparent group-hover:bg-gray-100 dark:group-hover:bg-slate-800',
+                    )}
+                  >
+                    <Icon size={15} className={isActive ? 'text-white' : ''} />
+                  </div>
+                  {!collapsed && (
+                    <span className="relative text-sm font-medium">{mode.name}</span>
+                  )}
+                </Link>
+              </React.Fragment>
             );
           })}
-
         </nav>
 
         {/* Bottom: Research health */}
@@ -361,6 +383,9 @@ export default function Layout({ children, currentPageName }) {
           onClick={() => setMobileOpen(false)}
         />
       )}
+
+      {/* Support Chatbot */}
+      <SupportChatbot />
     </div>
   );
 }

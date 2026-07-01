@@ -9,6 +9,12 @@ import ResearchCouncil from './pages/ResearchCouncil';
 import VivaSimulator from './pages/VivaSimulator';
 import Writing from './pages/Writing';
 import PaperSearch from './pages/PaperSearch';
+import Patent from './pages/Patent';
+import VideoNotes from './pages/VideoNotes';
+import Profile from './pages/Profile';
+import Billing from './pages/Billing';
+import GeoResearch from './pages/GeoResearch';
+import WhatsApp from './pages/WhatsApp';
 import __Layout from './Layout.jsx';
 
 export const PAGES = {
@@ -23,6 +29,12 @@ export const PAGES = {
     "VivaSimulator": VivaSimulator,
     "Writing": Writing,
     "PaperSearch": PaperSearch,
+    "Patent": Patent,
+    "VideoNotes": VideoNotes,
+    "Profile": Profile,
+    "Billing": Billing,
+    "GeoResearch": GeoResearch,
+    "WhatsApp": WhatsApp,
 }
 
 export const pagesConfig = {
